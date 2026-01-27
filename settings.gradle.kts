@@ -21,3 +21,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "Tamyrym"
 include(":app")
+
+include(":core:data")
+include(":core:domain")
+include(":core:presentation")
+include(":feature:splash")
