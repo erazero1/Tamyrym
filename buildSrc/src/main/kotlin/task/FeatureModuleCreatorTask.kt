@@ -38,6 +38,11 @@ abstract class FeatureModuleCreatorTask : DefaultTask() {
 
             val srcDir = moduleDir.resolve("src/main/kotlin/feature/$featureName/$module")
             srcDir.mkdirs()
+            val gitignoreFile = moduleDir.resolve(".gitignore")
+            val gitignoreContent = """
+                /build
+            """.trimIndent()
+            gitignoreFile.writeText(gitignoreContent)
 
             val buildFile = moduleDir.resolve("build.gradle.kts")
             val namespace = "erazero1.$featureName.$module"
