@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns="">
+    <string name="app_name" translatable="false">Tamyrym</string>
+    <string name="unknown_error">Произошла неизвестная ошибка</string>
+    <string name="email">Эл. почта</string>
+    <string name="password">Пароль</string>
+    <string name="sign_in">Войти</string>
+    <string name="enter_valid_email">Введите корректную эл. почту</string>
+    <string name="create_new_account">Создать новый аккаунт</string>
+    <string name="login_to_your_account">Войдите в свой аккаунт</string>
+    <string name="dont_have_account">У меня нету аккаунта</string>
+    <string name="register">Зарегистрироваться</string>
+</resources>

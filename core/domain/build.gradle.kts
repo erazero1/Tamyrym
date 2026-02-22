@@ -1,7 +1,3 @@
 plugins {
-    id("custom-android-library")
-}
-
-android {
-    namespace = ("core.domain")
+    id("custom-kotlin-library")
 }

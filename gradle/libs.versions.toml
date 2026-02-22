@@ -8,6 +8,7 @@ espressoCore = "3.7.0"
 lifecycleRuntimeKtx = "2.10.0"
 activityCompose = "1.12.2"
 composeBom = "2026.01.00"
+ksp = "2.3.4"
 
 navVersion = "2.9.6"
 lottieCompose = "6.7.1"
@@ -38,7 +39,7 @@ androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 
-navigation-compose = {group = "androidx.navigation", name = "navigation-compose", version.ref = "navVersion" }
+navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navVersion" }
 lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottieCompose" }
 
 kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "ktxSerialization" }
@@ -59,8 +60,9 @@ json-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serializ
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit-to-gson-converter = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
-room-core = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coilCompose" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
@@ -74,6 +76,7 @@ plugin-kotlin-compose = { module = "org.jetbrains.kotlin.plugin.compose:org.jetb
 plugin-kotlin-serialization = { module = "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin", version.ref = "kotlin" }
 plugin-android-library = { module = "com.android.library:com.android.library.gradle.plugin", version.ref = "agp" }
 plugin-kotlin-jvm = { module = "org.jetbrains.kotlin.jvm:org.jetbrains.kotlin.jvm.gradle.plugin", version.ref = "kotlin" }
+plugin-ksp = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -91,7 +94,6 @@ android = [
     "androidx-lifecycle-runtime-ktx",
     "androidx-appcompat",
     "material",
-    "koin-android"
 ]
 
 compose = [
@@ -109,7 +111,8 @@ compose = [
 ]
 
 koin = [
-    "koin-core"
+    "koin-core",
+    "koin-android"
 ]
 
 network = [
@@ -120,7 +123,8 @@ network = [
 ]
 
 persistence = [
-    "room-core",
+    "room-runtime",
+    "room-ktx",
     "datastore-preferences"
 ]
 

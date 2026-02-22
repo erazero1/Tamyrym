@@ -6,6 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.erazero1.splash.presentation.SplashScreen
+import core.ui.navigation.Route
+import feature.auth.ui.navigation.authGraph
 
 @Composable
 internal fun AppNavGraph(
@@ -21,9 +23,7 @@ internal fun AppNavGraph(
                 navController.navigate(Route.Auth)
             }
         }
-        composable<Route.Auth> {
-            TODO()
-        }
+        authGraph(navController = navController)
         composable<Route.Home> {
             TODO()
         }

@@ -1,0 +1,40 @@
+package feature.auth.di
+
+import core.data.local.TokenManager
+import core.data.network.api.AuthApi
+import feature.auth.data.repository.AuthRepositoryImpl
+import feature.auth.domain.AuthRepository
+import feature.auth.domain.usecase.LoginUseCase
+import feature.auth.domain.usecase.LogoutUseCase
+import feature.auth.domain.usecase.RegisterUseCase
+import feature.auth.ui.login.LoginViewModel
+import org.koin.core.module.dsl.viewModel
+import org.koin.dsl.module
+
+val authFeatureModule = module {
+    
+    single<AuthRepository> {
+        AuthRepositoryImpl(
+            authApi = get<AuthApi>(),
+            tokenManager = get<TokenManager>()
+        )
+    }
+
+    factory<LoginUseCase> {
+        LoginUseCase(get<AuthRepository>())
+    }
+
+    factory<LogoutUseCase> {
+        LogoutUseCase(get<AuthRepository>())
+    }
+
+    factory<RegisterUseCase> {
+        RegisterUseCase(get<AuthRepository>())
+    }
+    
+    viewModel<LoginViewModel> {
+        LoginViewModel(
+            loginUseCase = get<LoginUseCase>(),
+        )
+    }
+}

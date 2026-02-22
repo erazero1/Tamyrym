@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns="">
+    <string name="unknown_error">Белгісіз қате пайда болды</string>
+    <string name="email">Эл. пошта</string>
+    <string name="password">Құпия сөз</string>
+    <string name="sign_in">Кіру</string>
+    <string name="enter_valid_email">Жарамды эл. пошта енгізіңіз</string>
+    <string name="create_new_account">Жаңа аккаунт тіркеу</string>
+    <string name="login_to_your_account">Аккаунтынызға кіріңіз</string>
+    <string name="dont_have_account">Менде аккаунт жоқ</string>
+    <string name="register">Тіркелу</string>
+</resources>

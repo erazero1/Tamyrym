@@ -4,5 +4,5 @@ plugins {
 
 dependencies {
     implementation(platform(getLibrary("koin.bom")))
-    implementation(getBundle("bundles.koin"))
+    implementation(getBundle("koin"))
 }

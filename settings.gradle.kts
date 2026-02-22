@@ -24,5 +24,10 @@ include(":app")
 
 include(":core:data")
 include(":core:domain")
-include(":core:presentation")
+include(":core:ui")
 include(":feature:splash")
+
+include(":feature:auth:data")
+include(":feature:auth:domain")
+include(":feature:auth:ui")
+include(":feature:auth:di")

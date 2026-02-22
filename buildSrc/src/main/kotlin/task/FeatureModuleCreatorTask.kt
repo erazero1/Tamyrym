@@ -14,7 +14,7 @@ abstract class FeatureModuleCreatorTask : DefaultTask() {
             Creates a module inside feature directory.
             Sets module name $defaultFeatureName if no feature name is provided.
             E.g.
-            ./gradlew createFeatureModule -PfeatureName=auth
+            ./gradlew createFeatureModule -PmoduleName=auth
             ./gradlew createFeatureModule
         """.trimIndent()
     }
@@ -27,7 +27,7 @@ abstract class FeatureModuleCreatorTask : DefaultTask() {
     fun createModule() {
         val featureName = this.featureName ?: defaultFeatureName
         val featureDir = project.rootDir.resolve("feature/$featureName")
-        val modules = listOf("data", "domain", "presentation", "di")
+        val modules = listOf("data", "domain", "ui", "di")
         val settingsFile = project.rootDir.resolve("settings.gradle.kts")
 
         featureDir.mkdirs()
@@ -40,7 +40,7 @@ abstract class FeatureModuleCreatorTask : DefaultTask() {
             srcDir.mkdirs()
 
             val buildFile = moduleDir.resolve("build.gradle.kts")
-            val namespace = "feature.$featureName.$module"
+            val namespace = "erazero1.$featureName.$module"
 
             val buildScript = when (module) {
                 "data" -> """
@@ -53,7 +53,7 @@ abstract class FeatureModuleCreatorTask : DefaultTask() {
                     }
                     
                     dependencies {
-                        implementation(projects.feature.$featureName.domain)
+                        implementation(project(":feature:$featureName:domain"))
                     }
                 """.trimIndent()
 
@@ -61,15 +61,11 @@ abstract class FeatureModuleCreatorTask : DefaultTask() {
                     plugins {
                         id("base-domain")
                     }
-                    
-                    android {
-                        namespace = "$namespace"
-                    }
                 """.trimIndent()
 
-                "presentation" -> """
+                "ui" -> """
                     plugins {
-                        id("base-presentation")
+                        id("base-ui")
                     }
                     
                     android {
@@ -77,13 +73,23 @@ abstract class FeatureModuleCreatorTask : DefaultTask() {
                     }
                     
                     dependencies {
-                        implementation(projects.feature.$featureName.domain)
+                        implementation(project(":feature:$featureName:domain"))
                     }
                 """.trimIndent()
 
                 "di" -> """
                     plugins {
-                        ""
+                        id("base-di")
+                    }
+                    
+                    android {
+                        namespace = "eraezero1.$featureName.di"
+                    }
+                    
+                    dependencies {
+                        implementation(project(":feature:$featureName:data"))
+                        implementation(project(":feature:$featureName:domain"))
+                        implementation(project(":feature:$featureName:ui"))
                     }
                 """.trimIndent()
 

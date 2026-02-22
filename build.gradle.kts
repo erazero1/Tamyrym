@@ -7,7 +7,7 @@ plugins {
 }
 
 tasks.register<FeatureModuleCreatorTask>("createFeatureModule") {
-    featureName = project.findProperty("featureName") as? String
+    featureName = project.findProperty("moduleName") as? String
 }
 
 tasks.register<CoreModuleCreatorTask>("createCoreModule") {
