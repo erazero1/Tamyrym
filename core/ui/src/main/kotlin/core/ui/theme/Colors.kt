@@ -9,35 +9,36 @@ internal val LocalColorScheme = staticCompositionLocalOf { lightColorScheme() }
 
 internal fun lightColorScheme(): ColorScheme {
     return ColorScheme(
-        primary = Color(0xFF2769B2),
+        primary = Color(0xFF386A20),
         onPrimary = Color.White,
-        primaryContainer = Color(0xFFD1E4FF),
-        onPrimaryContainer = Color(0xFF001C3A),
+        primaryContainer = Color(0xFFB7F397),
+        onPrimaryContainer = Color(0xFF042100),
 
-        secondary = Color(0XFF545F71),
+        secondary = Color(0xFF55624C),
         onSecondary = Color.White,
-        secondaryContainer = Color(0xFFD8E3F8),
-        onSecondaryContainer = Color(0xFF3D4758),
+        secondaryContainer = Color(0xFFD8E7CB),
+        onSecondaryContainer = Color(0xFF131F0D),
 
-        tertiary = Color(0xFF6D5DAE),
+        tertiary = Color(0xFF006874),
         onTertiary = Color.White,
-        tertiaryContainer = Color(0xFFE6DEFF),
-        onTertiaryContainer = Color(0xFF23005A),
+        tertiaryContainer = Color(0xFF97F0FF),
+        onTertiaryContainer = Color(0xFF001F24),
 
-        background = Color(0xFFE9F3FF),
-        surface = Color.White,
-        surfaceDim = Color(0xFFE4E8EE),
-        surfaceBright = Color(0xFFF2F4F8),
-        onSurface = Color(0xFF212121),
-        onSurfaceVariant = Color(0xFF757575),
+        background = Color(0xFFFDFDF5),
+        surface = Color(0xFFFDFDF5),
+        surfaceDim = Color(0xFFDEDFDA),
+        surfaceBright = Color(0xFFFFFFFF),
+        onSurface = Color(0xFF1A1C18),
+        onSurfaceVariant = Color(0xFF43483E),
 
-        outline = Color(0xFFC6C5D0),
-        outlineCustom = Color(0xFF7B8794),
+        outline = Color(0xFF74796D),
+        outlineCustom = Color(0xFF8D9286),
 
         error = Color(0xFFBA1A1A),
         onError = Color.White,
         errorContainer = Color(0xFFFFDAD6),
-        onErrorContainer = Color(0xFF93000A),
+        onErrorContainer = Color(0xFF410002),
+
         success = Color(0xFF4CAF50),
         menuIconRed = Color(0xFFDC143C),
         successPrimaryContainer = Color(0xFFC8E6C9),
@@ -47,38 +48,39 @@ internal fun lightColorScheme(): ColorScheme {
 
 internal fun darkColorScheme(): ColorScheme {
     return ColorScheme(
-        primary = Color(0xFF5D9BFF),
-        onPrimary = Color(0xFF121212),
-        primaryContainer = Color(0xFF1A3A8F),
-        onPrimaryContainer = Color(0xFFD6E2FF),
+        primary = Color(0xFF9CD67D),
+        onPrimary = Color(0xFF0C3900),
+        primaryContainer = Color(0xFF1F5107),
+        onPrimaryContainer = Color(0xFFB7F397),
 
-        secondary = Color(0xFFBCC7DC),
-        onSecondary = Color(0xFF263141),
-        secondaryContainer = Color(0xFF3D4758),
-        onSecondaryContainer = Color(0xFFD8E3F8),
+        secondary = Color(0xFFBCCBB0),
+        onSecondary = Color(0xFF283420),
+        secondaryContainer = Color(0xFF3E4A35),
+        onSecondaryContainer = Color(0xFFD8E7CB),
 
-        tertiary = Color(0xFFDABDE2),
-        onTertiary = Color(0xFF3D2946),
-        tertiaryContainer = Color(0xFF553F5E),
-        onTertiaryContainer = Color(0xFFF7D9FF),
+        tertiary = Color(0xFF4FD8EB),
+        onTertiary = Color(0xFF00363D),
+        tertiaryContainer = Color(0xFF004F58),
+        onTertiaryContainer = Color(0xFF97F0FF),
 
-        background = Color(0xFFE9F3FF),
-        surface = Color(0xFF161B22),
-        surfaceDim = Color(0xFF0D1117),
-        surfaceBright = Color(0xFF1F242C),
-        onSurface = Color(0xFFE1E2E9),
-        onSurfaceVariant = Color(0xFFC3C6CF),
+        background = Color(0xFF1A1C18),
+        surface = Color(0xFF1A1C18),
+        surfaceDim = Color(0xFF121410),
+        surfaceBright = Color(0xFF3A3C35),
+        onSurface = Color(0xFFE3E3DC),
+        onSurfaceVariant = Color(0xFFC3C8BB),
 
-        outline = Color(0xFF8D9199),
-        outlineCustom = Color(0xFF43474E),
+        outline = Color(0xFF8D9286),
+        outlineCustom = Color(0xFF43483E),
 
         error = Color(0xFFFFB4AB),
         onError = Color(0xFF690005),
         errorContainer = Color(0xFF93000A),
         onErrorContainer = Color(0xFFFFDAD6),
-        success = Color(0xFF6FCF97),
+
+        success = Color(0xFF81C784),
         menuIconRed = Color(0xFFE95656),
-        successPrimaryContainer = Color(0xFF388E3C),
+        successPrimaryContainer = Color(0xFF1B5E20),
         successOnPrimaryContainer = Color(0xFFC8E6C9)
     )
 }

@@ -1,6 +1,7 @@
 package com.erazero1.tamyrym
 
 import android.app.Application
+import com.erazero1.splash.presentation.splashModule
 import core.data.local.localDataModule
 import core.data.remote.remoteDataModule
 import feature.auth.di.authFeatureModule
@@ -14,7 +15,7 @@ class TamyrymApp: Application() {
         startKoin {
             androidLogger()
             androidContext(this@TamyrymApp)
-            modules(remoteDataModule, localDataModule, authFeatureModule)
+            modules(remoteDataModule, localDataModule, authFeatureModule, splashModule)
         }
     }
 }

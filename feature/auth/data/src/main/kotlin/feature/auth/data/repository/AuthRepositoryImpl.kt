@@ -31,9 +31,14 @@ class AuthRepositoryImpl(
                 tokenManager.saveToken(result.data)
                 ApiSuccess(Unit)
             }
+
             is ApiError -> result
             is ApiException -> result
         }
+    }
+
+    override suspend fun isLoggedIn(): Boolean {
+        return tokenManager.isLoggedIn()
     }
 
     override suspend fun logout(): ApiResult<Unit> {
@@ -53,11 +58,12 @@ class AuthRepositoryImpl(
             )
         )
 
-        return when(result) {
+        return when (result) {
             is ApiSuccess -> {
                 tokenManager.saveToken(token = result.data.token)
                 ApiSuccess(Unit)
             }
+
             is ApiError -> result
             is ApiException -> result
         }

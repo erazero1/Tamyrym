@@ -7,6 +7,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import core.data.common.Constants
 import core.data.common.model.Token
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 class TokenManager(
@@ -26,6 +27,10 @@ class TokenManager(
             accessToken = accessToken,
             refreshToken = refreshToken
         ) else null
+    }
+
+    suspend fun isLoggedIn(): Boolean {
+        return tokenFlow.first() != null
     }
 
     suspend fun saveToken(token: Token) {

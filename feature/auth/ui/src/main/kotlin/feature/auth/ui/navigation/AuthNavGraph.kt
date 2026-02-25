@@ -11,12 +11,12 @@ import feature.auth.ui.register.RegisterScreen
 
 
 fun NavGraphBuilder.authGraph(navController: NavHostController) {
-    navigation<Route.Auth>(startDestination = Screen.Login) {
+    navigation<Route.Auth>(startDestination = Screen.AuthOptions) {
         composable<Screen.AuthOptions> {
             AuthOptionsScreen(
-                onGoogleClick = {},
-                onRegisterClick = {},
-                onLoginClick = {},
+                onLoginClick = { navController.navigate(Screen.Login) },
+                onRegisterClick = { navController.navigate(Screen.Register) },
+                onGoogleSignInClick = { navController.navigate(Route.Home) }
             )
         }
         composable<Screen.Login> {
@@ -28,6 +28,7 @@ fun NavGraphBuilder.authGraph(navController: NavHostController) {
         composable<Screen.Register> {
             RegisterScreen(
                 onBack = { navController.popBackStack() },
+                onRegister = { TODO() },
             )
         }
     }

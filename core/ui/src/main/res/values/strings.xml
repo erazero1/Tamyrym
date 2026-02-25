@@ -10,4 +10,12 @@
     <string name="login_to_your_account">Войдите в свой аккаунт</string>
     <string name="dont_have_account">У меня нету аккаунта</string>
     <string name="register">Зарегистрироваться</string>
+    <string name="continue_with_google" translatable="false">Продолжить через Google</string>
+    <string name="or">Или</string>
+    <string name="sign_up_with_email">Зарегистрироваться через эл. почту</string>
+    <string name="already_have_account">Уже есть аккаунт</string>
+    <string name="agreement_prefix" translatable="false">Нажимая на Продолжить или Зарегистрироваться, Вы соглашаетесь на</string>
+    <string name="terms_of_service" translatable="false">Условия предоставления услуг</string>
+    <string name="privacy_policy" translatable="false">Политику конфиденциальности</string>
+    <string name="and">и</string>
 </resources>

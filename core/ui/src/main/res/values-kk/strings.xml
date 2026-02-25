@@ -9,4 +9,8 @@
     <string name="login_to_your_account">Аккаунтынызға кіріңіз</string>
     <string name="dont_have_account">Менде аккаунт жоқ</string>
     <string name="register">Тіркелу</string>
+    <string name="or">Немесе</string>
+    <string name="sign_up_with_email">Эл. поштамен тіркелу</string>
+    <string name="already_have_account">Тіркелген аккаунт бар</string>
+    <string name="and">және</string>
 </resources>

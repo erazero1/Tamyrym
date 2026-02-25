@@ -8,4 +8,5 @@ android {
 
 dependencies {
     implementation(libs.lottie.compose)
+    implementation(project(":feature:auth:domain"))
 }

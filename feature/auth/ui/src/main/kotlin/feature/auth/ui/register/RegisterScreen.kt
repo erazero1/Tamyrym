@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 internal fun RegisterScreen(
     modifier: Modifier = Modifier,
     onBack: () -> Unit,
+    onRegister: () -> Unit,
 ) {
     TODO()
 }

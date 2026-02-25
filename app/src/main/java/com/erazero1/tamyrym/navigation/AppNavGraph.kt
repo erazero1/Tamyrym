@@ -19,8 +19,12 @@ internal fun AppNavGraph(
         startDestination = Route.Splash,
     ) {
         composable<Route.Splash> {
-            SplashScreen {
-                navController.navigate(Route.Auth)
+            SplashScreen { isLoggedIn ->
+                if (isLoggedIn) {
+                    navController.navigate(Route.Home)
+                } else {
+                    navController.navigate(Route.Auth)
+                }
             }
         }
         authGraph(navController = navController)

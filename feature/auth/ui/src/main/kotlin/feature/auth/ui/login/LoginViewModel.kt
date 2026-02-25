@@ -43,16 +43,14 @@ class LoginViewModel(
                     debug("Successful login.")
                 }
                 .onError { _, message, _ ->
-                    val errorMessage = message ?: "Unknown Error"
-                    _state.value = LoginState.Error(errorMessage)
-                    _action.send(LoginAction.ShowToast(message = errorMessage))
-                    debug("Login Error: $errorMessage")
+                    _state.value = LoginState.Error(message)
+                    _action.send(LoginAction.ShowToast(message = message))
+                    debug("Login Error: $message")
                 }
                 .onException { e ->
-                    val errorMessage = e.message ?: "Unknown Exception"
-                    _state.value = LoginState.Error(errorMessage)
-                    _action.send(LoginAction.ShowToast(message = errorMessage))
-                    debug("Login Exception: $e")
+                    _state.value = LoginState.Error(e.message)
+                    _action.send(LoginAction.ShowToast(message = e.message))
+                    debug("Login Exception: ${e.message}")
                 }
         }
     }

@@ -9,6 +9,7 @@ interface AuthRepository {
         password: String,
     ): ApiResult<Unit>
 
+    suspend fun isLoggedIn(): Boolean
     suspend fun logout(): ApiResult<Unit>
     suspend fun register(userInfo: UserRegistrationInfo): ApiResult<Unit>
 }
