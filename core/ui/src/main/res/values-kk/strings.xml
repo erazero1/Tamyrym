@@ -13,4 +13,20 @@
     <string name="sign_up_with_email">Эл. поштамен тіркелу</string>
     <string name="already_have_account">Тіркелген аккаунт бар</string>
     <string name="and">және</string>
+    <string name="profile">Профиль</string>
+    <string name="back">Артқа</string>
+    <string name="my_account">Менің аккаунтым</string>
+    <string name="edit_profile">Профильді өзгерту</string>
+    <string name="change_password">Парольді өзгерту</string>
+    <string name="settings">Параметрілер</string>
+    <string name="notifications">Хабарламар</string>
+    <string name="language">Тіл</string>
+    <string name="dark_mode">Қараңғы режим</string>
+    <string name="home">Басты</string>
+    <string name="tree">Шежіре</string>
+    <string name="press_back_again">Шығу үшін қайтадан артқа басыңыз</string>
+    <string name="try_again">Қайтадан байқап көру</string>
+    <string name="loading">Жүктеу</string>
+    <string name="logout">Аккаунтан шығу</string>
+    <string name="successful_logout">Аккаунтан сәтті шықтыңыз</string>
 </resources>

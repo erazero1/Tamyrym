@@ -4,6 +4,8 @@ import core.data.local.TokenManager
 import core.data.network.api.AuthApi
 import feature.auth.data.repository.AuthRepositoryImpl
 import feature.auth.domain.AuthRepository
+import feature.auth.domain.usecase.EditProfileUseCase
+import feature.auth.domain.usecase.GetProfileUseCase
 import feature.auth.domain.usecase.IsLoggedInUseCase
 import feature.auth.domain.usecase.LoginUseCase
 import feature.auth.domain.usecase.LogoutUseCase
@@ -36,6 +38,14 @@ val authFeatureModule = module {
 
     factory<IsLoggedInUseCase> {
         IsLoggedInUseCase(get<AuthRepository>())
+    }
+
+    factory<GetProfileUseCase> {
+        GetProfileUseCase(get<AuthRepository>())
+    }
+
+    factory<EditProfileUseCase> {
+        EditProfileUseCase(get<AuthRepository>())
     }
     
     viewModel<LoginViewModel> {

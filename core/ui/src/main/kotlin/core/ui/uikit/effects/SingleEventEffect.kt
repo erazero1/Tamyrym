@@ -1,4 +1,4 @@
-package core.ui.effects
+package core.ui.uikit.effects
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

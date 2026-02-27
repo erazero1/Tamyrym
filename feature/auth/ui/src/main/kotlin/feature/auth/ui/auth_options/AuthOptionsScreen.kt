@@ -16,6 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,7 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import core.presentation.R
-import core.ui.effects.SingleEventEffect
+import core.ui.uikit.effects.SingleEventEffect
 import core.ui.theme.AppTheme
 import feature.auth.ui.auth_options.model.AuthOptionsAction
 import feature.auth.ui.auth_options.model.AuthOptionsEvent
@@ -134,14 +135,22 @@ private fun AuthOptionsContent(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        Divider(modifier = Modifier.weight(1f))
+        HorizontalDivider(
+            modifier = Modifier.weight(1f),
+            thickness = 1.dp,
+            color = AppTheme.colors.outline
+        )
         Text(
             text = stringResource(R.string.or),
             modifier = Modifier.padding(horizontal = 16.dp),
             style = AppTheme.typography.paragraph,
             color = AppTheme.colors.onSurfaceVariant
         )
-        Divider(modifier = Modifier.weight(1f))
+        HorizontalDivider(
+            modifier = Modifier.weight(1f),
+            thickness = 1.dp,
+            color = AppTheme.colors.outline
+        )
     }
 
     Spacer(modifier = Modifier.height(24.dp))

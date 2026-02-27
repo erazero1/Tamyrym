@@ -4,15 +4,15 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ProfileEditRequest(
+data class UserUpdateRequest(
     @SerializedName("birth_year")
-    val birthYear: Int?,
+    val birthYear: Int,
     @SerializedName("first_name")
-    val firstName: String?,
+    val firstName: String,
     @SerializedName("gender")
-    val gender: String?,
+    val gender: String,
     @SerializedName("last_name")
-    val lastName: String?,
+    val lastName: String,
     @SerializedName("picture_url")
-    val pictureUrl: String?,
+    val pictureUrl: String,
 )

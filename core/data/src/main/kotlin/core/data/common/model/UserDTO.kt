@@ -18,5 +18,5 @@ data class UserDTO(
     @SerializedName("role")
     val role: String?,
     @SerializedName("status")
-    val status: String?,
+    val userStatus: String?,
 )

@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import core.presentation.R
-import core.ui.effects.SingleEventEffect
+import core.ui.uikit.effects.SingleEventEffect
 import core.ui.theme.AppTheme
 import core.ui.utils.showLongToast
 import feature.auth.ui.login.components.LoginForm

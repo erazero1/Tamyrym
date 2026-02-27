@@ -18,4 +18,20 @@
     <string name="terms_of_service" translatable="false">Условия предоставления услуг</string>
     <string name="privacy_policy" translatable="false">Политику конфиденциальности</string>
     <string name="and">и</string>
+    <string name="profile">Профиль</string>
+    <string name="back">Назад</string>
+    <string name="my_account">Мой аккаунт</string>
+    <string name="edit_profile">Редактировать профиль</string>
+    <string name="change_password">Изменить пароль</string>
+    <string name="settings">Настройки</string>
+    <string name="notifications">Уведомления</string>
+    <string name="language">Язык</string>
+    <string name="dark_mode">Тёмный режим</string>
+    <string name="home">Главная</string>
+    <string name="tree">Дерево</string>
+    <string name="press_back_again">Нажмите еще раз назад, чтобы выйти</string>
+    <string name="try_again">Попробовать снова</string>
+    <string name="loading">Загрузка</string>
+    <string name="logout">Выйти из аккаунта</string>
+    <string name="successful_logout">Вы успешно вышли из аккаунта</string>
 </resources>

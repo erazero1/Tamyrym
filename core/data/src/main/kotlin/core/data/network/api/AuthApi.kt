@@ -1,7 +1,8 @@
 package core.data.network.api
 
 import core.data.common.model.LoginRequest
-import core.data.common.model.ProfileEditRequest
+import core.data.common.model.LogoutResponse
+import core.data.common.model.UserUpdateRequest
 import core.data.common.model.RefreshAccessTokenRequest
 import core.data.common.model.RegisterRequest
 import core.data.common.model.RegisterResponse
@@ -20,7 +21,7 @@ interface AuthApi {
     ): ApiResult<Token>
 
     @POST("api/v1/auth/logout")
-    suspend fun logout(): ApiResult<Unit>
+    suspend fun logout(): ApiResult<LogoutResponse>
 
     @GET("api/v1/auth/me")
     suspend fun getProfile(): ApiResult<UserWrapper>
@@ -32,7 +33,7 @@ interface AuthApi {
 
     @PATCH("api/v1/auth/me")
     suspend fun editProfile(
-        @Body body: ProfileEditRequest,
+        @Body body: UserUpdateRequest,
     ): ApiResult<UserWrapper>
 
     @POST("api/v1/auth/register")
