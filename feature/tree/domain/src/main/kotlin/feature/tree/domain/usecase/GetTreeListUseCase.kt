@@ -1,0 +1,11 @@
+package feature.tree.domain.usecase
+
+import core.domain.result.ApiResult
+import feature.tree.domain.model.Tree
+import feature.tree.domain.repository.TreeRepository
+
+class GetTreeListUseCase(private val repository: TreeRepository) {
+    suspend operator fun invoke(): ApiResult<List<Tree>> {
+        return repository.getTreeList()
+    }
+}

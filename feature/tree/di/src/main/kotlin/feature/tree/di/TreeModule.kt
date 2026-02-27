@@ -6,6 +6,16 @@ import feature.tree.data.repository.PersonRepositoryImpl
 import feature.tree.data.repository.TreeRepositoryImpl
 import feature.tree.domain.repository.PersonRepository
 import feature.tree.domain.repository.TreeRepository
+import feature.tree.domain.usecase.AddRelationUseCase
+import feature.tree.domain.usecase.CreateNewTreeUseCase
+import feature.tree.domain.usecase.DeletePersonUseCase
+import feature.tree.domain.usecase.DeleteTreeUseCase
+import feature.tree.domain.usecase.GetPersonUseCase
+import feature.tree.domain.usecase.GetTreeGraphUseCase
+import feature.tree.domain.usecase.GetTreeListUseCase
+import feature.tree.domain.usecase.GetTreePersonsUseCase
+import feature.tree.domain.usecase.UpdatePersonUseCase
+import feature.tree.domain.usecase.UpdateTreeUseCase
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
@@ -27,5 +37,36 @@ val treeModule = module {
         PersonRepositoryImpl(
             personApi = get<PersonApi>(),
         )
+    }
+
+    factory<AddRelationUseCase> {
+        AddRelationUseCase(repository = get<PersonRepository>())
+    }
+    factory<DeletePersonUseCase> {
+        DeletePersonUseCase(repository = get<PersonRepository>())
+    }
+    factory<GetPersonUseCase> {
+        GetPersonUseCase(repository = get<PersonRepository>())
+    }
+    factory<UpdatePersonUseCase> {
+        UpdatePersonUseCase(repository = get<PersonRepository>())
+    }
+    factory<GetTreePersonsUseCase> {
+        GetTreePersonsUseCase(repository = get<PersonRepository>())
+    }
+    factory<CreateNewTreeUseCase> {
+        CreateNewTreeUseCase(repository = get<TreeRepository>())
+    }
+    factory<DeleteTreeUseCase> {
+        DeleteTreeUseCase(repository = get<TreeRepository>())
+    }
+    factory<GetTreeGraphUseCase> {
+        GetTreeGraphUseCase(repository = get<TreeRepository>())
+    }
+    factory<GetTreeListUseCase> {
+        GetTreeListUseCase(repository = get<TreeRepository>())
+    }
+    factory<UpdateTreeUseCase> {
+        UpdateTreeUseCase(repository = get<TreeRepository>())
     }
 }
