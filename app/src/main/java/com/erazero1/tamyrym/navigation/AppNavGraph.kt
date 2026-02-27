@@ -15,6 +15,7 @@ import core.presentation.R
 import core.ui.navigation.Route
 import feature.auth.ui.navigation.authGraph
 import feature.profile.ui.navigation.profileGraph
+import feature.tree.ui.navigation.treeGraph
 
 @Composable
 internal fun AppNavGraph(
@@ -39,6 +40,7 @@ internal fun AppNavGraph(
             }
         }
         authGraph(navController = navController)
+        treeGraph(navController = navController)
         profileGraph(navController = navController)
         composable<Route.Home> {
             Box(
@@ -46,14 +48,6 @@ internal fun AppNavGraph(
                 contentAlignment = Alignment.Center
             ) {
                 Text(text = stringResource(R.string.home))
-            }
-        }
-        composable<Route.Tree> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = stringResource(R.string.tree))
             }
         }
     }
