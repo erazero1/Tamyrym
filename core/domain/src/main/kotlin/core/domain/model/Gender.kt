@@ -1,4 +1,4 @@
-package feature.auth.domain.model
+package core.domain.model
 
 enum class Gender(val value: String) {
     MALE("MALE"),

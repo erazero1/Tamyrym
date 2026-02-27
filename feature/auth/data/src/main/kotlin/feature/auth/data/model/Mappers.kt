@@ -1,7 +1,7 @@
 package feature.auth.data.model
 
 import core.data.common.model.UserDTO
-import feature.auth.domain.model.Gender
+import core.domain.model.Gender
 import feature.auth.domain.model.Role
 import feature.auth.domain.model.User
 import feature.auth.domain.model.UserStatus

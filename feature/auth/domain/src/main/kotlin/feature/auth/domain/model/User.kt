@@ -1,5 +1,7 @@
 package feature.auth.domain.model
 
+import core.domain.model.Gender
+
 data class User(
     val birthYear: Int,
     val email: String,

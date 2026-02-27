@@ -6,6 +6,7 @@ import core.data.local.localDataModule
 import core.data.remote.remoteDataModule
 import feature.auth.di.authFeatureModule
 import feature.profile.di.profileModule
+import feature.tree.di.treeModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -18,7 +19,7 @@ class TamyrymApp : Application() {
             androidContext(this@TamyrymApp)
             modules(
                 remoteDataModule, localDataModule, authFeatureModule, splashModule,
-                profileModule,
+                profileModule, treeModule,
             )
         }
     }
