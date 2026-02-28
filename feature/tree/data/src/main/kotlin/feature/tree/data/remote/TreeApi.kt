@@ -1,10 +1,10 @@
 package feature.tree.data.remote
 
 import core.domain.result.ApiResult
-import feature.tree.data.model.TreeRequestDTO
 import feature.tree.data.model.TreeDTO
 import feature.tree.data.model.TreeGraphDTO
 import feature.tree.data.model.TreeListDTO
+import feature.tree.data.model.TreeRequestDTO
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -14,10 +14,10 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface TreeApi {
-    @POST("api/v1/geneology/tree")
+    @POST("api/v1/genealogy/tree")
     suspend fun createTree(@Body body: TreeRequestDTO): ApiResult<TreeDTO>
 
-    @GET("api/v1/geneology/tree/graph")
+    @GET("api/v1/genealogy/tree/graph")
     suspend fun getTreeGraph(
         @Query("tree_id") treeId: String,
         @Query("target_person_id") targetPersonId: String,
@@ -25,21 +25,21 @@ interface TreeApi {
         @Query("preview") preview: Boolean,
     ): ApiResult<TreeGraphDTO>
 
-    @GET("api/v1/geneology/tree/list")
+    @GET("api/v1/genealogy/tree/list")
     suspend fun getTreeList(): ApiResult<TreeListDTO>
 
-    @DELETE("api/v1/geneology/tree/{treeId}")
+    @DELETE("api/v1/genealogy/tree/{treeId}")
     suspend fun deleteTree(@Path("treeId") treeId: String): ApiResult<Unit>
 
-    @PATCH("api/v1/geneology/tree/{treeId}")
+    @PATCH("api/v1/genealogy/tree/{treeId}")
     suspend fun updateTree(
         @Path("treeId") treeId: String,
         @Body body: TreeRequestDTO,
     ): ApiResult<TreeDTO>
 
-    @GET("api/v1/geneology/tree/{treeId}/export/gedcom")
+    @GET("api/v1/genealogy/tree/{treeId}/export/gedcom")
     suspend fun exportGedcom(@Path("treeId") treeId: String): ApiResult<Unit>
 
-    @POST("api/v1/geneology/tree/{treeId}/import/gedcom")
+    @POST("api/v1/genealogy/tree/{treeId}/import/gedcom")
     suspend fun importGedcom(@Path("treeId") treeId: String): ApiResult<Unit>
 }
