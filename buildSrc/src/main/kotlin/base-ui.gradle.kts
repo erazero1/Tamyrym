@@ -16,6 +16,8 @@ dependencies {
     implementation(getBundle("android"))
     implementation(platform(getLibrary("androidx.compose.bom")))
     implementation(platform(getLibrary("koin.bom")))
+    implementation(platform(getLibrary("firebase.bom")))
     implementation(getBundle("compose"))
+    implementation(getBundle("analytics"))
     implementation(getBundle("ui.utils"))
 }

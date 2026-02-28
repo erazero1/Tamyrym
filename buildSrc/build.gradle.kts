@@ -10,4 +10,6 @@ dependencies {
     implementation(libs.plugin.kotlin.serialization)
     implementation(libs.plugin.kotlin.jvm)
     implementation(libs.plugin.ksp)
+    implementation(libs.plugin.gms.google.services)
+    implementation(libs.plugin.firebase.crashlytics)
 }

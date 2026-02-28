@@ -3,7 +3,7 @@ package core.ui.theme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import core.ui.utils.ifNull
+import com.erazero1.utils.ifNull
 
 enum class ColorSchemeMode {
     LIGHT,
