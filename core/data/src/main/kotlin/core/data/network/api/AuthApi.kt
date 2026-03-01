@@ -1,12 +1,13 @@
 package core.data.network.api
 
 import core.data.common.model.LoginRequest
+import core.data.common.model.LogoutRequest
 import core.data.common.model.LogoutResponse
-import core.data.common.model.UserUpdateRequest
 import core.data.common.model.RefreshAccessTokenRequest
 import core.data.common.model.RegisterRequest
 import core.data.common.model.RegisterResponse
 import core.data.common.model.Token
+import core.data.common.model.UserUpdateRequest
 import core.data.common.model.UserWrapper
 import core.domain.result.ApiResult
 import retrofit2.http.Body
@@ -21,7 +22,9 @@ interface AuthApi {
     ): ApiResult<Token>
 
     @POST("api/v1/auth/logout")
-    suspend fun logout(): ApiResult<LogoutResponse>
+    suspend fun logout(
+        @Body body: LogoutRequest,
+    ): ApiResult<LogoutResponse>
 
     @GET("api/v1/auth/me")
     suspend fun getProfile(): ApiResult<UserWrapper>

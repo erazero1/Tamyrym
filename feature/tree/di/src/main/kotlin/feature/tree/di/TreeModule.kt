@@ -16,6 +16,7 @@ import feature.tree.domain.usecase.GetTreeListUseCase
 import feature.tree.domain.usecase.GetTreePersonsUseCase
 import feature.tree.domain.usecase.UpdatePersonUseCase
 import feature.tree.domain.usecase.UpdateTreeUseCase
+import feature.tree.ui.tree_canvas.TreeCanvasViewModel
 import feature.tree.ui.tree_list.TreeListViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -78,6 +79,13 @@ val treeModule = module {
             getTreeListUseCase = get<GetTreeListUseCase>(),
             createNewTreeUseCase = get<CreateNewTreeUseCase>(),
             updateTreeUseCase = get<UpdateTreeUseCase>(),
+        )
+    }
+
+    viewModel<TreeCanvasViewModel> {
+        TreeCanvasViewModel(
+            getTreeGraphUseCase = get<GetTreeGraphUseCase>(),
+            addRelationUseCase = get<AddRelationUseCase>(),
         )
     }
 }

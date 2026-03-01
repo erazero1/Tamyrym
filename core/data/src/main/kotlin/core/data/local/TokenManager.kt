@@ -33,6 +33,10 @@ class TokenManager(
         return tokenFlow.first() != null
     }
 
+    suspend fun getToken(): Token? {
+        return tokenFlow.first()
+    }
+
     suspend fun saveToken(token: Token) {
         context.dataStore.edit { preferences ->
             preferences[ACCESS_TOKEN] = token.accessToken

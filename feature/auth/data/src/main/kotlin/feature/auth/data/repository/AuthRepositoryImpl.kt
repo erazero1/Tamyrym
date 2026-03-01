@@ -1,6 +1,7 @@
 package feature.auth.data.repository
 
 import core.data.common.model.LoginRequest
+import core.data.common.model.LogoutRequest
 import core.data.common.model.RegisterRequest
 import core.data.common.model.UserUpdateRequest
 import core.data.local.TokenManager
@@ -47,7 +48,10 @@ class AuthRepositoryImpl(
     }
 
     override suspend fun logout(): ApiResult<Unit> {
-        return when(val result = authApi.logout()) {
+        val token = tokenManager.getToken()
+        return when (val result = authApi.logout(
+            body = LogoutRequest(refreshToken = token?.refreshToken ?: "")
+        )) {
             is ApiError -> result
             is ApiException -> result
             is ApiSuccess<*> -> {
