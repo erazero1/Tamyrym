@@ -34,4 +34,12 @@
     <string name="loading">Загрузка</string>
     <string name="logout">Выйти из аккаунта</string>
     <string name="successful_logout">Вы успешно вышли из аккаунта</string>
+    <string name="create_new_tree">Создать новое дерево</string>
+    <string name="tree_name">Название древа</string>
+    <string name="tree_description">Описание древа</string>
+    <string name="cancel">Отменить</string>
+    <string name="create">Создать</string>
+    <string name="more">Подробнее</string>
+    <string name="trees">Деревья</string>
+    <string name="edit">Редактировать</string>
 </resources>

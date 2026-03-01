@@ -29,4 +29,12 @@
     <string name="loading">Жүктеу</string>
     <string name="logout">Аккаунтан шығу</string>
     <string name="successful_logout">Аккаунтан сәтті шықтыңыз</string>
+    <string name="create_new_tree">Жаңа шежіре құру</string>
+    <string name="tree_name">Шежіре атауы</string>
+    <string name="tree_description">Шежіре сипаттамасы</string>
+    <string name="cancel">Болдырмау</string>
+    <string name="create">Құру</string>
+    <string name="more">Толығырақ</string>
+    <string name="trees">Шежірелер</string>
+    <string name="edit">Редакциялау</string>
 </resources>

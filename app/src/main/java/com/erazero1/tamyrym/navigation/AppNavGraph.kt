@@ -40,7 +40,7 @@ internal fun AppNavGraph(
             }
         }
         authGraph(navController = navController)
-        treeGraph(navController = navController)
+        treeGraph(modifier = modifier, navController = navController)
         profileGraph(navController = navController)
         composable<Route.Home> {
             Box(

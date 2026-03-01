@@ -76,7 +76,8 @@ val treeModule = module {
     viewModel<TreeListViewModel> {
         TreeListViewModel(
             getTreeListUseCase = get<GetTreeListUseCase>(),
-            createNewTreeUseCase = get<CreateNewTreeUseCase>()
+            createNewTreeUseCase = get<CreateNewTreeUseCase>(),
+            updateTreeUseCase = get<UpdateTreeUseCase>(),
         )
     }
 }
