@@ -9,6 +9,7 @@
     <string name="login_to_your_account">Login to your account</string>
     <string name="dont_have_account">I don\'t have an account</string>
     <string name="register">Register</string>
+    <string name="continue_with_google">Continue with Google</string>
     <string name="or">Or</string>
     <string name="sign_up_with_email">Sign up with email</string>
     <string name="already_have_account">Already have an account</string>
@@ -37,4 +38,6 @@
     <string name="more">More</string>
     <string name="trees">Trees</string>
     <string name="edit">Edit</string>
+    <string name="agreement_prefix">By clicking Continue or Sign Up</string>
+    <string name="agreement_suffix">you agree to User agreement and Privacy Policy</string>
 </resources>

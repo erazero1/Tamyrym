@@ -1,5 +1,6 @@
 package feature.auth.ui.auth_options
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -15,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -25,14 +25,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import core.presentation.R
-import core.ui.uikit.effects.SingleEventEffect
 import core.ui.theme.AppTheme
+import core.ui.uikit.effects.SingleEventEffect
+import core.ui.utils.appendComma
+import core.ui.utils.appendSpace
 import feature.auth.ui.auth_options.model.AuthOptionsAction
 import feature.auth.ui.auth_options.model.AuthOptionsEvent
 import feature.auth.ui.auth_options.model.AuthOptionsState
@@ -95,6 +105,7 @@ private fun AuthOptionsLayout(
     }
 }
 
+@SuppressLint("LocalContextGetResourceValueCall")
 @Composable
 private fun AuthOptionsContent(
     onEvent: (AuthOptionsEvent) -> Unit,
@@ -111,7 +122,7 @@ private fun AuthOptionsContent(
         onClick = { onEvent(AuthOptionsEvent.OnGoogleSignInClick) },
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp),
+            .height(64.dp),
         shape = AppTheme.shapes.small,
         border = BorderStroke(width = 1.dp, color = AppTheme.colors.primary)
     ) {
@@ -159,7 +170,7 @@ private fun AuthOptionsContent(
         onClick = { onEvent(AuthOptionsEvent.OnRegisterClick) },
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp),
+            .height(64.dp),
         shape = AppTheme.shapes.small,
         colors = ButtonDefaults.buttonColors(
             containerColor = AppTheme.colors.primary,
@@ -168,7 +179,8 @@ private fun AuthOptionsContent(
     ) {
         Text(
             text = stringResource(R.string.sign_up_with_email),
-            style = AppTheme.typography.listItem
+            style = AppTheme.typography.listItem,
+            textAlign = TextAlign.Center,
         )
     }
 
@@ -194,9 +206,26 @@ private fun AuthOptionsContent(
         }
     }
 
-
     Text(
-        text = stringResource(R.string.agreement_prefix),
+        text = buildAnnotatedString {
+            append(stringResource(R.string.agreement_prefix))
+            appendComma()
+            appendSpace()
+            withLink(
+                LinkAnnotation.Url(
+                    url = stringResource(R.string.privacy_policy_link),
+                    styles = TextLinkStyles(
+                        style = SpanStyle(
+                            color = Color.Blue,
+                            fontWeight = FontWeight.W600,
+                            textDecoration = TextDecoration.Underline,
+                        )
+                    )
+                )
+            ) {
+                append(stringResource(R.string.agreement_suffix))
+            }
+        },
         style = AppTheme.typography.hint,
         textAlign = TextAlign.Center,
         color = AppTheme.colors.onSurfaceVariant

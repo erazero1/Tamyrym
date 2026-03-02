@@ -9,6 +9,7 @@
     <string name="login_to_your_account">Аккаунтынызға кіріңіз</string>
     <string name="dont_have_account">Менде аккаунт жоқ</string>
     <string name="register">Тіркелу</string>
+    <string name="continue_with_google">Google-мен жалғастыру</string>
     <string name="or">Немесе</string>
     <string name="sign_up_with_email">Эл. поштамен тіркелу</string>
     <string name="already_have_account">Тіркелген аккаунт бар</string>
@@ -37,4 +38,6 @@
     <string name="more">Толығырақ</string>
     <string name="trees">Шежірелер</string>
     <string name="edit">Редакциялау</string>
+    <string name="agreement_prefix">«Жалғастыру» немесе «Тіркелу» түймесін басу арқылы</string>
+    <string name="agreement_suffix">Сіз Пайдаланушы келісіміне және Құпиялық саясатына келісесіз</string>
 </resources>
