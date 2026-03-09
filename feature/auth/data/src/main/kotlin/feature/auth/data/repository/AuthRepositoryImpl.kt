@@ -70,7 +70,6 @@ class AuthRepositoryImpl(
                 gender = userInfo.gender,
                 lastName = userInfo.lastName,
                 password = userInfo.password,
-                pictureUrl = userInfo.pictureUrl,
             )
         )
 

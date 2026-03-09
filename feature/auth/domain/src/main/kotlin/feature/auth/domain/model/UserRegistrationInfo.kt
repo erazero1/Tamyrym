@@ -7,5 +7,4 @@ data class UserRegistrationInfo(
     val gender: String?,
     val lastName: String?,
     val password: String,
-    val pictureUrl: String?,
 )

@@ -17,6 +17,4 @@ data class RegisterRequest(
     val lastName: String?,
     @SerializedName("password")
     val password: String,
-    @SerializedName("picture_url")
-    val pictureUrl: String?,
 )

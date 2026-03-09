@@ -6,6 +6,7 @@ import core.data.common.result.NetworkResultCallAdapterFactory
 import core.data.local.TokenManager
 import core.data.network.TokenAuthenticator
 import core.data.network.api.AuthApi
+import core.data.network.api.MediaApi
 import core.data.network.interceptor.AuthInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -64,5 +65,9 @@ val remoteDataModule = module {
 
     single<AuthApi> {
         get<Retrofit>().create(AuthApi::class.java)
+    }
+
+    single<MediaApi> {
+        get<Retrofit>().create(MediaApi::class.java)
     }
 }
