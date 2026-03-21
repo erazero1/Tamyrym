@@ -1,7 +1,7 @@
 package core.data.network
 
 import android.util.Log
-import core.data.common.model.RefreshAccessTokenRequest
+import core.data.common.model.RefreshAccessTokenRequestDTO
 import core.data.common.model.Token
 import core.data.local.TokenManager
 import core.data.network.api.AuthApi
@@ -34,7 +34,7 @@ internal class TokenAuthenticator(
             } else {
                 runBlocking {
                     var resultToken: Token? = null
-                    authApi.refreshAccessToken(RefreshAccessTokenRequest(refreshToken))
+                    authApi.refreshAccessToken(RefreshAccessTokenRequestDTO(refreshToken))
                         .onSuccess {
                             tokenManager.saveToken(it)
                             resultToken = it

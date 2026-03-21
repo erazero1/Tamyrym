@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RegisterRequest(
+data class RegisterRequestDTO(
     @SerializedName("birth_year")
     val birthYear: Int?,
     @SerializedName("email")

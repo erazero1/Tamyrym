@@ -4,7 +4,9 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ConfirmAvatarUploadRequest(
-    @SerializedName("object_key")
-    val objectKey: String,
+data class LoginRequestDTO(
+    @SerializedName("email")
+    val email: String,
+    @SerializedName("password")
+    val password: String,
 )

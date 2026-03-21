@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RegisterResponse(
+data class RegisterResponseDTO(
     @SerializedName("tokens")
     val token: Token,
     @SerializedName("user_id")

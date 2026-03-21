@@ -1,9 +1,9 @@
 package feature.auth.data.repository
 
-import core.data.common.model.LoginRequest
-import core.data.common.model.LogoutRequest
-import core.data.common.model.RegisterRequest
-import core.data.common.model.UserUpdateRequest
+import core.data.common.model.LoginRequestDTO
+import core.data.common.model.LogoutRequestDTO
+import core.data.common.model.RegisterRequestDTO
+import core.data.common.model.UserUpdateRequestDTO
 import core.data.local.TokenManager
 import core.data.network.api.AuthApi
 import core.domain.result.ApiError
@@ -26,7 +26,7 @@ class AuthRepositoryImpl(
         password: String,
     ): ApiResult<Unit> {
         val result = authApi.login(
-            body = LoginRequest(
+            body = LoginRequestDTO(
                 email = email,
                 password = password,
             )
@@ -50,7 +50,7 @@ class AuthRepositoryImpl(
     override suspend fun logout(): ApiResult<Unit> {
         val token = tokenManager.getToken()
         return when (val result = authApi.logout(
-            body = LogoutRequest(refreshToken = token?.refreshToken ?: "")
+            body = LogoutRequestDTO(refreshToken = token?.refreshToken ?: "")
         )) {
             is ApiError -> result
             is ApiException -> result
@@ -63,7 +63,7 @@ class AuthRepositoryImpl(
 
     override suspend fun register(userInfo: UserRegistrationInfo): ApiResult<Unit> {
         val result = authApi.register(
-            body = RegisterRequest(
+            body = RegisterRequestDTO(
                 birthYear = userInfo.birthYear,
                 email = userInfo.email,
                 firstName = userInfo.firstName,
@@ -90,7 +90,7 @@ class AuthRepositoryImpl(
 
     override suspend fun editProfile(userUpdate: UserUpdate): ApiResult<User> {
         return authApi.editProfile(
-            body = UserUpdateRequest(
+            body = UserUpdateRequestDTO(
                 birthYear = userUpdate.birthYear,
                 firstName = userUpdate.firstName,
                 gender = userUpdate.gender.value,

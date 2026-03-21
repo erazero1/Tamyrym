@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GetAvatarUploadUrlRequest(
+data class GetUploadUrlRequestDTO(
     @SerializedName("content_type")
     val contentType: String,
     @SerializedName("filename")

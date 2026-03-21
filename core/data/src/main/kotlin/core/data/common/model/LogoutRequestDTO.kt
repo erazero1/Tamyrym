@@ -4,6 +4,6 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LogoutRequest(
+data class LogoutRequestDTO(
     @SerializedName("refresh_token") val refreshToken: String,
 )

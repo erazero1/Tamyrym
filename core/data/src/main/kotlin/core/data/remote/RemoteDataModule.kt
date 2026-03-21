@@ -7,7 +7,17 @@ import core.data.local.TokenManager
 import core.data.network.TokenAuthenticator
 import core.data.network.api.AuthApi
 import core.data.network.api.MediaApi
+import core.data.network.api.MediaUploadApi
 import core.data.network.interceptor.AuthInterceptor
+import core.data.network.repository.MediaRepositoryImpl
+import core.data.network.repository.MediaUploadRepositoryImpl
+import core.domain.repository.MediaRepository
+import core.domain.repository.MediaUploadRepository
+import core.domain.usecase.ConfirmMediaUploadUseCase
+import core.domain.usecase.GetMediaUploadUrlUseCase
+import core.domain.usecase.GetPersonMediaUseCase
+import core.domain.usecase.GetTreeMediaUseCase
+import core.domain.usecase.UploadMediaUseCase
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.qualifier.named
@@ -69,5 +79,35 @@ val remoteDataModule = module {
 
     single<MediaApi> {
         get<Retrofit>().create(MediaApi::class.java)
+    }
+
+
+    // Repositories
+    factory<MediaRepository> {
+        MediaRepositoryImpl(api = get<MediaApi>())
+    }
+
+    factory<MediaUploadRepository> {
+        MediaUploadRepositoryImpl(api = get<MediaUploadApi>())
+    }
+
+    // Use cases
+    factory<ConfirmMediaUploadUseCase> {
+        ConfirmMediaUploadUseCase(repository = get<MediaRepository>())
+    }
+    factory<GetMediaUploadUrlUseCase> {
+        GetMediaUploadUrlUseCase(repository = get<MediaRepository>())
+    }
+    factory<GetPersonMediaUseCase> {
+        GetPersonMediaUseCase(repository = get<MediaRepository>())
+    }
+    factory<GetPersonMediaUseCase> {
+        GetPersonMediaUseCase(repository = get<MediaRepository>())
+    }
+    factory<GetTreeMediaUseCase> {
+        GetTreeMediaUseCase(repository = get<MediaRepository>())
+    }
+    factory<UploadMediaUseCase> {
+        UploadMediaUseCase(repository = get<MediaUploadRepository>())
     }
 }
