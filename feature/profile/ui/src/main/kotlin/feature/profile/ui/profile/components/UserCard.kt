@@ -37,13 +37,13 @@ internal fun UserCard(
 
         Text(
             text = "${user.firstName} ${user.lastName}",
-            style = AppTheme.typography.listItem,
+            style = AppTheme.typography.titleMedium,
             color = AppTheme.colors.onSurface,
         )
 
         Text(
             text = user.email,
-            style = AppTheme.typography.paragraph,
+            style = AppTheme.typography.bodyLarge,
             color = AppTheme.colors.onSurface,
         )
     }

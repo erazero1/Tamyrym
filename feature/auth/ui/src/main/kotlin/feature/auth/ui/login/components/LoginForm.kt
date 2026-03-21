@@ -60,7 +60,7 @@ internal fun LoginForm(
             },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            textStyle = AppTheme.typography.paragraph,
+            textStyle = AppTheme.typography.bodyLarge,
             enabled = !isLoading
         )
 
@@ -71,7 +71,7 @@ internal fun LoginForm(
             label = { Text(stringResource(R.string.password)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            textStyle = AppTheme.typography.paragraph,
+            textStyle = AppTheme.typography.bodyLarge,
             enabled = !isLoading
         )
 
@@ -95,7 +95,7 @@ internal fun LoginForm(
             } else {
                 Text(
                     text = stringResource(R.string.sign_in),
-                    style = AppTheme.typography.listItem
+                    style = AppTheme.typography.titleMedium
                 )
             }
         }

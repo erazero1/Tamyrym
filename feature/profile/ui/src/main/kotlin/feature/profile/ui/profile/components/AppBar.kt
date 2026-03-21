@@ -20,7 +20,7 @@ internal fun AppBar(
         title = {
             Text(
                 text = stringResource(R.string.profile),
-                style = AppTheme.typography.h3
+                style = AppTheme.typography.headlineSmall
             )
         },
         colors = TopAppBarDefaults.topAppBarColors(

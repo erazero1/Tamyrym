@@ -33,7 +33,7 @@ fun LoadingCard(
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = stringResource(id = R.string.loading),
-            style = AppTheme.typography.h3,
+            style = AppTheme.typography.headlineSmall,
             textAlign = TextAlign.Center,
         )
     }

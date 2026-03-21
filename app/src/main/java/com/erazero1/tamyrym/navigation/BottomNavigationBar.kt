@@ -48,7 +48,7 @@ fun AppBottomBar(
                 label = {
                     Text(
                         text = stringResource(item.label),
-                        style = AppTheme.typography.hint,
+                        style = AppTheme.typography.labelMedium,
                     )
                 },
                 icon = {

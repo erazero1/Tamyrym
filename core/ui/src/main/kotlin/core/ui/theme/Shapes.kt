@@ -2,10 +2,10 @@ package core.ui.theme
 
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Shapes as M3Shapes
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.dp
+import androidx.compose.material3.Shapes as M3Shapes
 
 internal val LocalShapes = staticCompositionLocalOf { shapes() }
 

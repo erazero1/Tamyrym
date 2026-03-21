@@ -49,7 +49,7 @@ internal fun Option(
             Text(
                 modifier = Modifier.weight(1f),
                 text = text,
-                style = AppTheme.typography.listItem,
+                style = AppTheme.typography.titleMedium,
             )
             Icon(
                 modifier = Modifier

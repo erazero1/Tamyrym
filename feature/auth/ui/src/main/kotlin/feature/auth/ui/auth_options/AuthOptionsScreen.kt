@@ -134,7 +134,7 @@ private fun AuthOptionsContent(
         Text(
             text = stringResource(R.string.continue_with_google),
             modifier = Modifier.padding(start = 16.dp),
-            style = AppTheme.typography.listItem,
+            style = AppTheme.typography.titleMedium,
             color = AppTheme.colors.onSurface
         )
     }
@@ -154,7 +154,7 @@ private fun AuthOptionsContent(
         Text(
             text = stringResource(R.string.or),
             modifier = Modifier.padding(horizontal = 16.dp),
-            style = AppTheme.typography.paragraph,
+            style = AppTheme.typography.bodyLarge,
             color = AppTheme.colors.onSurfaceVariant
         )
         HorizontalDivider(
@@ -179,7 +179,7 @@ private fun AuthOptionsContent(
     ) {
         Text(
             text = stringResource(R.string.sign_up_with_email),
-            style = AppTheme.typography.listItem,
+            style = AppTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
         )
     }
@@ -193,7 +193,7 @@ private fun AuthOptionsContent(
         Text(
             text = stringResource(R.string.already_have_account),
             color = AppTheme.colors.onSurfaceVariant,
-            style = AppTheme.typography.paragraph
+            style = AppTheme.typography.bodyLarge
         )
         TextButton(
             onClick = { onEvent(AuthOptionsEvent.OnLoginClick) },
@@ -201,7 +201,7 @@ private fun AuthOptionsContent(
             Text(
                 text = stringResource(R.string.sign_in),
                 color = AppTheme.colors.primary,
-                style = AppTheme.typography.listItem
+                style = AppTheme.typography.titleMedium
             )
         }
     }
@@ -226,7 +226,7 @@ private fun AuthOptionsContent(
                 append(stringResource(R.string.agreement_suffix))
             }
         },
-        style = AppTheme.typography.hint,
+        style = AppTheme.typography.labelMedium,
         textAlign = TextAlign.Center,
         color = AppTheme.colors.onSurfaceVariant
     )
