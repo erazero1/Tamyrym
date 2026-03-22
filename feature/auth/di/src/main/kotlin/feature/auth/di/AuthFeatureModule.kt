@@ -12,11 +12,12 @@ import feature.auth.domain.usecase.LogoutUseCase
 import feature.auth.domain.usecase.RegisterUseCase
 import feature.auth.ui.auth_options.AuthOptionsViewModel
 import feature.auth.ui.login.LoginViewModel
+import feature.auth.ui.register.RegisterViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val authFeatureModule = module {
-    
+
     single<AuthRepository> {
         AuthRepositoryImpl(
             authApi = get<AuthApi>(),
@@ -47,10 +48,16 @@ val authFeatureModule = module {
     factory<EditProfileUseCase> {
         EditProfileUseCase(get<AuthRepository>())
     }
-    
+
     viewModel<LoginViewModel> {
         LoginViewModel(
             loginUseCase = get<LoginUseCase>(),
+        )
+    }
+
+    viewModel<RegisterViewModel> {
+        RegisterViewModel(
+            registerUseCase = get<RegisterUseCase>(),
         )
     }
 

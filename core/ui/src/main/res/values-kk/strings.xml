@@ -40,4 +40,21 @@
     <string name="edit">Редакциялау</string>
     <string name="agreement_prefix">«Жалғастыру» немесе «Тіркелу» түймесін басу арқылы</string>
     <string name="agreement_suffix">Сіз Пайдаланушы келісіміне және Құпиялық саясатына келісесіз</string>
+    <string name="choose_year">Жылды таңданыз</string>
+    <string name="tell_about_yourself">Өзіңіз туралы айтыңыз</string>
+    <string name="first_name">Аты</string>
+    <string name="last_name">Тегі</string>
+    <string name="gender">Жынысы</string>
+    <string name="year_of_birth">Туған жылы</string>
+    <string name="select_a_year">Жылды таңдаңыз</string>
+    <string name="_continue">Жалғастыру</string>
+    <string name="male">Ер</string>
+    <string name="female">Әйел</string>
+    <string name="other">Басқа</string>
+    <string name="create_your_account">Аккаунтыңызды жасаңыз</string>
+    <string name="toggle_password_visibility">Құпия сөздің көрінуін ауыстыру</string>
+    <string name="password_requirements">Құпия сөз кемінде 8 таңбадан тұруы керек. Сонымен қатар, құрамында сан және бас әріп болуы тиіс</string>
+    <string name="finish_registration">Тіркелуді аяқтау</string>
+    <string name="fill_all_fields">Барлық өрістерді толтырыңыз</string>
+    <string name="prefer_not_to_say">Айтпауды жөн көремін</string>
 </resources>

@@ -40,4 +40,21 @@
     <string name="edit">Edit</string>
     <string name="agreement_prefix">By clicking Continue or Sign Up</string>
     <string name="agreement_suffix">you agree to User agreement and Privacy Policy</string>
+    <string name="choose_year">Choose a year</string>
+    <string name="tell_about_yourself">Tell us about yourself</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="gender">Gender</string>
+    <string name="year_of_birth">Year of birth</string>
+    <string name="select_a_year">Select a year</string>
+    <string name="_continue">Continue</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="other">Other</string>
+    <string name="create_your_account">Create your account</string>
+    <string name="toggle_password_visibility">Toggle password visibility</string>
+    <string name="password_requirements">The password must be at least 8 characters long. It must also contain a number and a capital letter.</string>
+    <string name="finish_registration">Finish registration</string>
+    <string name="fill_all_fields">Please, fill all fields</string>
+    <string name="prefer_not_to_say">Prefer not to say</string>
 </resources>
