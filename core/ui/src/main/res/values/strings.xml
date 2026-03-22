@@ -13,7 +13,7 @@
     <string name="continue_with_google">Продолжить через Google</string>
     <string name="or">Или</string>
     <string name="sign_up_with_email">Зарегистрироваться через эл. почту</string>
-    <string name="already_have_account">Уже есть аккаунт</string>
+    <string name="already_have_account">Уже есть аккаунт?</string>
     <string name="agreement_prefix">Нажимая на Продолжить или Зарегистрироваться</string>
     <string name="and">и</string>
     <string name="profile">Профиль</string>

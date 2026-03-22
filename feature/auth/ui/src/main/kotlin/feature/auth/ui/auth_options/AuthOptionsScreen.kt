@@ -2,7 +2,6 @@ package feature.auth.ui.auth_options
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -110,32 +110,46 @@ private fun AuthOptionsLayout(
 private fun AuthOptionsContent(
     onEvent: (AuthOptionsEvent) -> Unit,
 ) {
-    Image(
+    Icon(
         painter = painterResource(id = R.drawable.ic_logo),
         contentDescription = stringResource(R.string.app_name),
-        modifier = Modifier.size(120.dp)
+        modifier = Modifier.size(120.dp),
+        tint = Color.Unspecified,
+    )
+    Spacer(modifier = Modifier.height(8.dp))
+
+    Text(
+        text = stringResource(R.string.app_name),
+        style = AppTheme.typography.displayMedium,
+        fontWeight = FontWeight.Bold,
+        textAlign = TextAlign.Center,
+        color = AppTheme.colors.primary
     )
 
     Spacer(modifier = Modifier.height(48.dp))
 
-    OutlinedButton(
+    Button(
         onClick = { onEvent(AuthOptionsEvent.OnGoogleSignInClick) },
         modifier = Modifier
             .fillMaxWidth()
             .height(64.dp),
-        shape = AppTheme.shapes.small,
-        border = BorderStroke(width = 1.dp, color = AppTheme.colors.primary)
+        shape = AppTheme.shapes.large,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = AppTheme.colors.primary,
+            contentColor = AppTheme.colors.onPrimary
+        ),
     ) {
-        Image(
+        Icon(
             painter = painterResource(id = R.drawable.ic_google),
             contentDescription = "Google icon",
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(24.dp),
+            tint = Color.Unspecified,
         )
         Text(
             text = stringResource(R.string.continue_with_google),
             modifier = Modifier.padding(start = 16.dp),
             style = AppTheme.typography.titleMedium,
-            color = AppTheme.colors.onSurface
+            color = AppTheme.colors.onPrimary
         )
     }
 
@@ -166,18 +180,22 @@ private fun AuthOptionsContent(
 
     Spacer(modifier = Modifier.height(24.dp))
 
-    Button(
+    OutlinedButton(
         onClick = { onEvent(AuthOptionsEvent.OnRegisterClick) },
         modifier = Modifier
             .fillMaxWidth()
             .height(64.dp),
-        shape = AppTheme.shapes.small,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = AppTheme.colors.primary,
-            contentColor = AppTheme.colors.onPrimary
-        )
+        shape = AppTheme.shapes.large,
+        border = BorderStroke(width = 1.dp, color = AppTheme.colors.primary)
     ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_mail),
+            contentDescription = "Mail icon",
+            modifier = Modifier.size(24.dp),
+            tint = AppTheme.colors.onSurface,
+        )
         Text(
+            modifier = Modifier.padding(start = 16.dp),
             text = stringResource(R.string.sign_up_with_email),
             style = AppTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
@@ -206,6 +224,8 @@ private fun AuthOptionsContent(
         }
     }
 
+    Spacer(modifier = Modifier.height(32.dp))
+
     Text(
         text = buildAnnotatedString {
             append(stringResource(R.string.agreement_prefix))
@@ -216,7 +236,7 @@ private fun AuthOptionsContent(
                     url = stringResource(R.string.privacy_policy_link),
                     styles = TextLinkStyles(
                         style = SpanStyle(
-                            color = Color.Blue,
+                            color = AppTheme.colors.link,
                             fontWeight = FontWeight.W600,
                             textDecoration = TextDecoration.Underline,
                         )

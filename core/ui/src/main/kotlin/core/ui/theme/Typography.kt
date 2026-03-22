@@ -3,14 +3,19 @@ package core.ui.theme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import core.presentation.R
 
 internal val LocalTypography = staticCompositionLocalOf { defaultTypography() }
 
+private val manropeFontFamily = FontFamily(
+    Font(R.font.manrope)
+)
 private val DefaultTextStyle = TextStyle(
-    fontFamily = FontFamily.Default,
+    fontFamily = manropeFontFamily,
 )
 
 fun compactTypography(): Typography {

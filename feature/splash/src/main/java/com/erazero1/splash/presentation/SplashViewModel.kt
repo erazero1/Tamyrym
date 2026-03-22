@@ -12,8 +12,9 @@ import kotlinx.coroutines.launch
 class SplashViewModel(
     private val isLoggedInUseCase: IsLoggedInUseCase,
 ) : ViewModel() {
-    private val _isLoggedIn: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val isLoggedIn: StateFlow<Boolean> = _isLoggedIn.asStateFlow()
+
+    private val _isLoggedIn: MutableStateFlow<Boolean?> = MutableStateFlow(null)
+    val isLoggedIn: StateFlow<Boolean?> = _isLoggedIn.asStateFlow()
 
     init {
         viewModelScope.launch {
