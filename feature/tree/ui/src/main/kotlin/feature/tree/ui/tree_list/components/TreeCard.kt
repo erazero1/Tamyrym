@@ -62,7 +62,7 @@ internal fun TreeCard(
             )
             Text(
                 text = tree.description,
-                style = AppTheme.typography.labelMedium,
+                style = AppTheme.typography.labelLarge,
                 color = AppTheme.colors.outlineCustom,
             )
         }

@@ -116,7 +116,7 @@ private fun LoginLayout(
                 Text(
                     text = stringResource(R.string.dont_have_account),
                     color = AppTheme.colors.onSurfaceVariant,
-                    style = AppTheme.typography.labelMedium
+                    style = AppTheme.typography.labelLarge
                 )
                 TextButton(
                     onClick = onRegisterClick,
@@ -124,7 +124,7 @@ private fun LoginLayout(
                     Text(
                         text = stringResource(R.string.register),
                         color = AppTheme.colors.primary,
-                        style = AppTheme.typography.labelMedium
+                        style = AppTheme.typography.labelLarge
                     )
                 }
             }

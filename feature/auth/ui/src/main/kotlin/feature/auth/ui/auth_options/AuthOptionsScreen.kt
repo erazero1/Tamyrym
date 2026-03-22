@@ -226,7 +226,7 @@ private fun AuthOptionsContent(
                 append(stringResource(R.string.agreement_suffix))
             }
         },
-        style = AppTheme.typography.labelMedium,
+        style = AppTheme.typography.labelLarge,
         textAlign = TextAlign.Center,
         color = AppTheme.colors.onSurfaceVariant
     )
