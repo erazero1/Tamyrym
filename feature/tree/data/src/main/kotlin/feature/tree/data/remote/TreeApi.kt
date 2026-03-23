@@ -1,6 +1,8 @@
 package feature.tree.data.remote
 
 import core.domain.result.ApiResult
+import feature.tree.data.model.AddRelationRequestDTO
+import feature.tree.data.model.PersonDTO
 import feature.tree.data.model.TreeDTO
 import feature.tree.data.model.TreeGraphDTO
 import feature.tree.data.model.TreeListDTO
@@ -14,7 +16,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface TreeApi {
-    @POST("api/v1/genealogy/tree")
+    @POST("api/v1/genealogy/tree") // OK
     suspend fun createTree(@Body body: TreeRequestDTO): ApiResult<TreeDTO>
 
     @GET("api/v1/genealogy/tree/graph")
@@ -42,4 +44,10 @@ interface TreeApi {
 
     @POST("api/v1/genealogy/tree/{treeId}/import/gedcom")
     suspend fun importGedcom(@Path("treeId") treeId: String): ApiResult<Unit>
+
+    @POST("api/v1/genealogy/tree/{tree_id}/person")
+    suspend fun addRelationToPerson(
+        @Path("tree_id") treeId: String,
+        @Body body: AddRelationRequestDTO,
+    ): ApiResult<PersonDTO>
 }

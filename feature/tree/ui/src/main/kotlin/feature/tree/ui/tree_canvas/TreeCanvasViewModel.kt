@@ -3,7 +3,6 @@ package feature.tree.ui.tree_canvas
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import core.domain.result.onSuccess
-import feature.tree.domain.usecase.AddRelationUseCase
 import feature.tree.domain.usecase.GetTreeGraphUseCase
 import feature.tree.ui.tree_canvas.model.TreeCanvasEvent
 import feature.tree.ui.tree_canvas.model.TreeCanvasState
@@ -15,7 +14,6 @@ import kotlinx.coroutines.launch
 
 class TreeCanvasViewModel(
     private val getTreeGraphUseCase: GetTreeGraphUseCase,
-    private val addRelationUseCase: AddRelationUseCase,
 ) : ViewModel() {
     private val _state: MutableStateFlow<TreeCanvasState> =
         MutableStateFlow(TreeCanvasState.Initial)

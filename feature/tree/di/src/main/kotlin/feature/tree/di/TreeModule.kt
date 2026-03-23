@@ -6,11 +6,12 @@ import feature.tree.data.repository.PersonRepositoryImpl
 import feature.tree.data.repository.TreeRepositoryImpl
 import feature.tree.domain.repository.PersonRepository
 import feature.tree.domain.repository.TreeRepository
-import feature.tree.domain.usecase.AddRelationUseCase
+import feature.tree.domain.usecase.AddRelationToPersonUseCase
 import feature.tree.domain.usecase.CreateNewTreeUseCase
 import feature.tree.domain.usecase.DeletePersonUseCase
 import feature.tree.domain.usecase.DeleteTreeUseCase
 import feature.tree.domain.usecase.GetPersonUseCase
+import feature.tree.domain.usecase.GetPersonsByTreeId
 import feature.tree.domain.usecase.GetTreeGraphUseCase
 import feature.tree.domain.usecase.GetTreeListUseCase
 import feature.tree.domain.usecase.GetTreePersonsUseCase
@@ -41,9 +42,8 @@ val treeModule = module {
             personApi = get<PersonApi>(),
         )
     }
-
-    factory<AddRelationUseCase> {
-        AddRelationUseCase(repository = get<PersonRepository>())
+    factory<GetPersonsByTreeId> {
+        GetPersonsByTreeId(repository = get<PersonRepository>())
     }
     factory<DeletePersonUseCase> {
         DeletePersonUseCase(repository = get<PersonRepository>())
@@ -56,6 +56,9 @@ val treeModule = module {
     }
     factory<GetTreePersonsUseCase> {
         GetTreePersonsUseCase(repository = get<PersonRepository>())
+    }
+    factory<AddRelationToPersonUseCase> {
+        AddRelationToPersonUseCase(repository = get<TreeRepository>())
     }
     factory<CreateNewTreeUseCase> {
         CreateNewTreeUseCase(repository = get<TreeRepository>())
@@ -85,7 +88,6 @@ val treeModule = module {
     viewModel<TreeCanvasViewModel> {
         TreeCanvasViewModel(
             getTreeGraphUseCase = get<GetTreeGraphUseCase>(),
-            addRelationUseCase = get<AddRelationUseCase>(),
         )
     }
 }
