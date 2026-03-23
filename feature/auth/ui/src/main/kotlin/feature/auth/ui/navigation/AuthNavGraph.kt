@@ -15,7 +15,7 @@ fun NavGraphBuilder.authGraph(navController: NavHostController) {
             AuthOptionsScreen(
                 onLoginClick = { navController.navigate(Screen.Login) },
                 onRegisterClick = { navController.navigate(Screen.Register) },
-                onGoogleSignInClick = { navController.navigate(Route.Home) }
+                onNavigateToHome = { navController.navigate(Route.Home) }
             )
         }
         composable<Screen.Login> {

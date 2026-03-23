@@ -23,9 +23,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
@@ -43,9 +45,11 @@ import core.ui.theme.AppTheme
 import core.ui.uikit.effects.SingleEventEffect
 import core.ui.utils.appendComma
 import core.ui.utils.appendSpace
+import core.ui.utils.showLongToast
 import feature.auth.ui.auth_options.model.AuthOptionsAction
 import feature.auth.ui.auth_options.model.AuthOptionsEvent
 import feature.auth.ui.auth_options.model.AuthOptionsState
+import feature.auth.ui.auth_options.model.CredentialHelper
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -53,16 +57,29 @@ internal fun AuthOptionsScreen(
     modifier: Modifier = Modifier,
     onLoginClick: () -> Unit,
     onRegisterClick: () -> Unit,
-    onGoogleSignInClick: () -> Unit,
+    onNavigateToHome: () -> Unit,
 ) {
+    val context = LocalContext.current
     val viewModel: AuthOptionsViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val helper = remember { CredentialHelper(context) }
 
     SingleEventEffect(viewModel.action) { action ->
         when (action) {
             AuthOptionsAction.NavigateToLogin -> onLoginClick()
             AuthOptionsAction.NavigateToRegister -> onRegisterClick()
-            AuthOptionsAction.HandleGoogleSignIn -> onGoogleSignInClick()
+            AuthOptionsAction.OnGoogleSignInSuccess -> onNavigateToHome()
+            AuthOptionsAction.LaunchGoogleSignIn -> {
+                try {
+                    val token = helper.getGoogleIdToken()
+                    if (token != null) {
+                        viewModel.onEvent(AuthOptionsEvent.OnGoogleSignInResult(token))
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    showLongToast(context, context.getString(R.string.unknown_error))
+                }
+            }
         }
     }
 

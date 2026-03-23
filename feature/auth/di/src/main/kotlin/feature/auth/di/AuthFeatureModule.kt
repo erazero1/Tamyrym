@@ -67,6 +67,8 @@ val authFeatureModule = module {
     }
 
     viewModel<AuthOptionsViewModel> {
-        AuthOptionsViewModel()
+        AuthOptionsViewModel(
+            googleOAuthUseCase = get<GoogleOAuthUseCase>(),
+        )
     }
 }
