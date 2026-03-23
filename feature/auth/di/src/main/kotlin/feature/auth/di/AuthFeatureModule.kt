@@ -6,6 +6,7 @@ import feature.auth.data.repository.AuthRepositoryImpl
 import feature.auth.domain.AuthRepository
 import feature.auth.domain.usecase.EditProfileUseCase
 import feature.auth.domain.usecase.GetProfileUseCase
+import feature.auth.domain.usecase.GoogleOAuthUseCase
 import feature.auth.domain.usecase.IsLoggedInUseCase
 import feature.auth.domain.usecase.LoginUseCase
 import feature.auth.domain.usecase.LogoutUseCase
@@ -27,6 +28,10 @@ val authFeatureModule = module {
 
     factory<LoginUseCase> {
         LoginUseCase(get<AuthRepository>())
+    }
+
+    factory<GoogleOAuthUseCase> {
+        GoogleOAuthUseCase(get<AuthRepository>())
     }
 
     factory<LogoutUseCase> {

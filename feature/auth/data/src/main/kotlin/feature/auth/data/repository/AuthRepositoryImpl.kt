@@ -1,5 +1,6 @@
 package feature.auth.data.repository
 
+import core.data.common.model.GoogleOAuthRequestDTO
 import core.data.common.model.LoginRequestDTO
 import core.data.common.model.LogoutRequestDTO
 import core.data.common.model.RegisterRequestDTO
@@ -35,6 +36,22 @@ class AuthRepositoryImpl(
         return when (result) {
             is ApiSuccess -> {
                 tokenManager.saveToken(result.data)
+                ApiSuccess(Unit)
+            }
+
+            is ApiError -> result
+            is ApiException -> result
+        }
+    }
+
+    override suspend fun googleOAuth(idToken: String): ApiResult<Unit> {
+        val result = authApi.googleOAuth(
+            body = GoogleOAuthRequestDTO(idToken = idToken),
+        )
+
+        return when (result) {
+            is ApiSuccess -> {
+                tokenManager.saveToken(result.data.tokens)
                 ApiSuccess(Unit)
             }
 

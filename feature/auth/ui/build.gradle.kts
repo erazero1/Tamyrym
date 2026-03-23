@@ -11,4 +11,5 @@ android {
 
 dependencies {
     implementation(project(":feature:auth:domain"))
+    implementation(libs.androidx.credentials)
 }
