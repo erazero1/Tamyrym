@@ -1,5 +1,7 @@
 package core.data.network.api
 
+import core.data.common.model.GoogleOAuthRequestDTO
+import core.data.common.model.GoogleOAuthResponseDTO
 import core.data.common.model.LoginRequestDTO
 import core.data.common.model.LogoutRequestDTO
 import core.data.common.model.LogoutResponseDTO
@@ -20,6 +22,11 @@ interface AuthApi {
     suspend fun login(
         @Body body: LoginRequestDTO,
     ): ApiResult<Token>
+
+    @POST("api/v1/auth/google/mobile")
+    suspend fun googleOAuth(
+        @Body body: GoogleOAuthRequestDTO,
+    ): ApiResult<GoogleOAuthResponseDTO>
 
     @POST("api/v1/auth/logout")
     suspend fun logout(

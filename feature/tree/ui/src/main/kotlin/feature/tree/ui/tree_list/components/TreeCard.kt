@@ -57,12 +57,12 @@ internal fun TreeCard(
         ) {
             Text(
                 text = tree.name,
-                style = AppTheme.typography.listItem,
+                style = AppTheme.typography.titleMedium,
                 color = AppTheme.colors.onPrimaryContainer,
             )
             Text(
                 text = tree.description,
-                style = AppTheme.typography.hint,
+                style = AppTheme.typography.labelLarge,
                 color = AppTheme.colors.outlineCustom,
             )
         }
@@ -95,7 +95,7 @@ internal fun TreeCard(
                     text = {
                         Text(
                             text = stringResource(R.string.edit),
-                            style = AppTheme.typography.listItem,
+                            style = AppTheme.typography.titleMedium,
                             color = AppTheme.colors.onSecondaryContainer
                         )
                     },

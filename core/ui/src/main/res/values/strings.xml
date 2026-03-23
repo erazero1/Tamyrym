@@ -13,7 +13,7 @@
     <string name="continue_with_google">Продолжить через Google</string>
     <string name="or">Или</string>
     <string name="sign_up_with_email">Зарегистрироваться через эл. почту</string>
-    <string name="already_have_account">Уже есть аккаунт</string>
+    <string name="already_have_account">Уже есть аккаунт?</string>
     <string name="agreement_prefix">Нажимая на Продолжить или Зарегистрироваться</string>
     <string name="and">и</string>
     <string name="profile">Профиль</string>
@@ -42,4 +42,21 @@
     <string name="edit">Редактировать</string>
     <string name="privacy_policy_link" translatable="false">https://tamyrym.kz/privacy_policy</string>
     <string name="agreement_suffix">Вы соглашаетесь на Пользовательское соглашение и Политику конфидицальности</string>
+    <string name="choose_year">Выберите год</string>
+    <string name="tell_about_yourself">Расскажите о себе</string>
+    <string name="first_name">Имя</string>
+    <string name="last_name">Фамилия</string>
+    <string name="gender">Пол</string>
+    <string name="year_of_birth">Год рождения</string>
+    <string name="select_a_year">Выберите год</string>
+    <string name="_continue">Продолжить</string>
+    <string name="male">Мужчина</string>
+    <string name="female">Женщина</string>
+    <string name="other">Другое</string>
+    <string name="create_your_account">Создайте свой аккаунт</string>
+    <string name="toggle_password_visibility">Переключить видимость пароля</string>
+    <string name="password_requirements">Пароль должен быть не менее из 8 символов. А также должен содержать цифру и прописную(заглавную) букву</string>
+    <string name="finish_registration">Завершить регистрацию</string>
+    <string name="fill_all_fields">Заполните все поля</string>
+    <string name="prefer_not_to_say">Не указывать</string>
 </resources>

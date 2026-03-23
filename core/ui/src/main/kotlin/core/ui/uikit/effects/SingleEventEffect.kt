@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 fun <T : Any> SingleEventEffect(
     sideEffectFlow: Flow<T>,
     lifeCycleState: Lifecycle.State = Lifecycle.State.STARTED,
-    collector: (T) -> Unit
+    collector: suspend (T) -> Unit,
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
 

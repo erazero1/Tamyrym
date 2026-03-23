@@ -33,14 +33,14 @@ fun ErrorCard(
         Text(
             modifier = Modifier.semantics { heading() },
             text = stringResource(id = R.string.unknown_error),
-            style = AppTheme.typography.h3,
+            style = AppTheme.typography.headlineSmall,
             textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(12.dp))
         if (message.isNotBlank()) {
             Text(
                 text = message,
-                style = AppTheme.typography.paragraph,
+                style = AppTheme.typography.bodyLarge,
                 color = AppTheme.colors.onSurfaceVariant,
                 textAlign = TextAlign.Center,
             )
@@ -60,7 +60,7 @@ fun ErrorCard(
                 Text(
                     modifier = Modifier.padding(vertical = 8.dp),
                     text = stringResource(id = R.string.try_again),
-                    style = AppTheme.typography.paragraph,
+                    style = AppTheme.typography.bodyLarge,
                 )
             }
         }

@@ -6,17 +6,19 @@ import feature.auth.data.repository.AuthRepositoryImpl
 import feature.auth.domain.AuthRepository
 import feature.auth.domain.usecase.EditProfileUseCase
 import feature.auth.domain.usecase.GetProfileUseCase
+import feature.auth.domain.usecase.GoogleOAuthUseCase
 import feature.auth.domain.usecase.IsLoggedInUseCase
 import feature.auth.domain.usecase.LoginUseCase
 import feature.auth.domain.usecase.LogoutUseCase
 import feature.auth.domain.usecase.RegisterUseCase
 import feature.auth.ui.auth_options.AuthOptionsViewModel
 import feature.auth.ui.login.LoginViewModel
+import feature.auth.ui.register.RegisterViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val authFeatureModule = module {
-    
+
     single<AuthRepository> {
         AuthRepositoryImpl(
             authApi = get<AuthApi>(),
@@ -26,6 +28,10 @@ val authFeatureModule = module {
 
     factory<LoginUseCase> {
         LoginUseCase(get<AuthRepository>())
+    }
+
+    factory<GoogleOAuthUseCase> {
+        GoogleOAuthUseCase(get<AuthRepository>())
     }
 
     factory<LogoutUseCase> {
@@ -47,14 +53,22 @@ val authFeatureModule = module {
     factory<EditProfileUseCase> {
         EditProfileUseCase(get<AuthRepository>())
     }
-    
+
     viewModel<LoginViewModel> {
         LoginViewModel(
             loginUseCase = get<LoginUseCase>(),
         )
     }
 
+    viewModel<RegisterViewModel> {
+        RegisterViewModel(
+            registerUseCase = get<RegisterUseCase>(),
+        )
+    }
+
     viewModel<AuthOptionsViewModel> {
-        AuthOptionsViewModel()
+        AuthOptionsViewModel(
+            googleOAuthUseCase = get<GoogleOAuthUseCase>(),
+        )
     }
 }

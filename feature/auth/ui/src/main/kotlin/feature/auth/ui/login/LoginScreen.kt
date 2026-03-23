@@ -21,8 +21,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import core.presentation.R
-import core.ui.uikit.effects.SingleEventEffect
 import core.ui.theme.AppTheme
+import core.ui.uikit.effects.SingleEventEffect
 import core.ui.utils.showLongToast
 import feature.auth.ui.login.components.LoginForm
 import feature.auth.ui.login.model.LoginAction
@@ -84,7 +84,7 @@ private fun LoginLayout(
         ) {
             Text(
                 text = stringResource(id = R.string.app_name),
-                style = AppTheme.typography.h1,
+                style = AppTheme.typography.headlineLarge,
                 color = AppTheme.colors.primary
             )
 
@@ -92,7 +92,7 @@ private fun LoginLayout(
 
             Text(
                 text = stringResource(R.string.login_to_your_account),
-                style = AppTheme.typography.paragraph,
+                style = AppTheme.typography.bodyLarge,
                 color = AppTheme.colors.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
@@ -116,7 +116,7 @@ private fun LoginLayout(
                 Text(
                     text = stringResource(R.string.dont_have_account),
                     color = AppTheme.colors.onSurfaceVariant,
-                    style = AppTheme.typography.hint
+                    style = AppTheme.typography.labelLarge
                 )
                 TextButton(
                     onClick = onRegisterClick,
@@ -124,7 +124,7 @@ private fun LoginLayout(
                     Text(
                         text = stringResource(R.string.register),
                         color = AppTheme.colors.primary,
-                        style = AppTheme.typography.hint
+                        style = AppTheme.typography.labelLarge
                     )
                 }
             }

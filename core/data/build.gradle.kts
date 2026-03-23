@@ -6,7 +6,7 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
-val baseUrl = gradleLocalProperties(rootDir, providers)
+val baseUrl: String = gradleLocalProperties(rootDir, providers)
     .getProperty("base_url", "")
 
 android {

@@ -2,7 +2,6 @@ package feature.auth.ui.auth_options
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,15 +16,18 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
@@ -43,9 +45,11 @@ import core.ui.theme.AppTheme
 import core.ui.uikit.effects.SingleEventEffect
 import core.ui.utils.appendComma
 import core.ui.utils.appendSpace
+import core.ui.utils.showLongToast
 import feature.auth.ui.auth_options.model.AuthOptionsAction
 import feature.auth.ui.auth_options.model.AuthOptionsEvent
 import feature.auth.ui.auth_options.model.AuthOptionsState
+import feature.auth.ui.auth_options.model.CredentialHelper
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -53,16 +57,29 @@ internal fun AuthOptionsScreen(
     modifier: Modifier = Modifier,
     onLoginClick: () -> Unit,
     onRegisterClick: () -> Unit,
-    onGoogleSignInClick: () -> Unit,
+    onNavigateToHome: () -> Unit,
 ) {
+    val context = LocalContext.current
     val viewModel: AuthOptionsViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val helper = remember { CredentialHelper(context) }
 
     SingleEventEffect(viewModel.action) { action ->
         when (action) {
             AuthOptionsAction.NavigateToLogin -> onLoginClick()
             AuthOptionsAction.NavigateToRegister -> onRegisterClick()
-            AuthOptionsAction.HandleGoogleSignIn -> onGoogleSignInClick()
+            AuthOptionsAction.OnGoogleSignInSuccess -> onNavigateToHome()
+            AuthOptionsAction.LaunchGoogleSignIn -> {
+                try {
+                    val token = helper.getGoogleIdToken()
+                    if (token != null) {
+                        viewModel.onEvent(AuthOptionsEvent.OnGoogleSignInResult(token))
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    showLongToast(context, context.getString(R.string.unknown_error))
+                }
+            }
         }
     }
 
@@ -110,32 +127,46 @@ private fun AuthOptionsLayout(
 private fun AuthOptionsContent(
     onEvent: (AuthOptionsEvent) -> Unit,
 ) {
-    Image(
+    Icon(
         painter = painterResource(id = R.drawable.ic_logo),
         contentDescription = stringResource(R.string.app_name),
-        modifier = Modifier.size(120.dp)
+        modifier = Modifier.size(120.dp),
+        tint = Color.Unspecified,
+    )
+    Spacer(modifier = Modifier.height(8.dp))
+
+    Text(
+        text = stringResource(R.string.app_name),
+        style = AppTheme.typography.displayMedium,
+        fontWeight = FontWeight.Bold,
+        textAlign = TextAlign.Center,
+        color = AppTheme.colors.primary
     )
 
     Spacer(modifier = Modifier.height(48.dp))
 
-    OutlinedButton(
+    Button(
         onClick = { onEvent(AuthOptionsEvent.OnGoogleSignInClick) },
         modifier = Modifier
             .fillMaxWidth()
             .height(64.dp),
-        shape = AppTheme.shapes.small,
-        border = BorderStroke(width = 1.dp, color = AppTheme.colors.primary)
+        shape = AppTheme.shapes.large,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = AppTheme.colors.primary,
+            contentColor = AppTheme.colors.onPrimary
+        ),
     ) {
-        Image(
+        Icon(
             painter = painterResource(id = R.drawable.ic_google),
             contentDescription = "Google icon",
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(24.dp),
+            tint = Color.Unspecified,
         )
         Text(
             text = stringResource(R.string.continue_with_google),
             modifier = Modifier.padding(start = 16.dp),
-            style = AppTheme.typography.listItem,
-            color = AppTheme.colors.onSurface
+            style = AppTheme.typography.titleMedium,
+            color = AppTheme.colors.onPrimary
         )
     }
 
@@ -154,7 +185,7 @@ private fun AuthOptionsContent(
         Text(
             text = stringResource(R.string.or),
             modifier = Modifier.padding(horizontal = 16.dp),
-            style = AppTheme.typography.paragraph,
+            style = AppTheme.typography.bodyLarge,
             color = AppTheme.colors.onSurfaceVariant
         )
         HorizontalDivider(
@@ -166,20 +197,24 @@ private fun AuthOptionsContent(
 
     Spacer(modifier = Modifier.height(24.dp))
 
-    Button(
+    OutlinedButton(
         onClick = { onEvent(AuthOptionsEvent.OnRegisterClick) },
         modifier = Modifier
             .fillMaxWidth()
             .height(64.dp),
-        shape = AppTheme.shapes.small,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = AppTheme.colors.primary,
-            contentColor = AppTheme.colors.onPrimary
-        )
+        shape = AppTheme.shapes.large,
+        border = BorderStroke(width = 1.dp, color = AppTheme.colors.primary)
     ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_mail),
+            contentDescription = "Mail icon",
+            modifier = Modifier.size(24.dp),
+            tint = AppTheme.colors.onSurface,
+        )
         Text(
+            modifier = Modifier.padding(start = 16.dp),
             text = stringResource(R.string.sign_up_with_email),
-            style = AppTheme.typography.listItem,
+            style = AppTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
         )
     }
@@ -193,7 +228,7 @@ private fun AuthOptionsContent(
         Text(
             text = stringResource(R.string.already_have_account),
             color = AppTheme.colors.onSurfaceVariant,
-            style = AppTheme.typography.paragraph
+            style = AppTheme.typography.bodyLarge
         )
         TextButton(
             onClick = { onEvent(AuthOptionsEvent.OnLoginClick) },
@@ -201,10 +236,12 @@ private fun AuthOptionsContent(
             Text(
                 text = stringResource(R.string.sign_in),
                 color = AppTheme.colors.primary,
-                style = AppTheme.typography.listItem
+                style = AppTheme.typography.titleMedium
             )
         }
     }
+
+    Spacer(modifier = Modifier.height(32.dp))
 
     Text(
         text = buildAnnotatedString {
@@ -216,7 +253,7 @@ private fun AuthOptionsContent(
                     url = stringResource(R.string.privacy_policy_link),
                     styles = TextLinkStyles(
                         style = SpanStyle(
-                            color = Color.Blue,
+                            color = AppTheme.colors.link,
                             fontWeight = FontWeight.W600,
                             textDecoration = TextDecoration.Underline,
                         )
@@ -226,7 +263,7 @@ private fun AuthOptionsContent(
                 append(stringResource(R.string.agreement_suffix))
             }
         },
-        style = AppTheme.typography.hint,
+        style = AppTheme.typography.labelLarge,
         textAlign = TextAlign.Center,
         color = AppTheme.colors.onSurfaceVariant
     )
