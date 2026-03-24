@@ -9,19 +9,18 @@ import feature.tree.domain.model.TreeRequest
 
 interface TreeRepository {
     suspend fun createNewTree(body: TreeRequest): ApiResult<Tree>
-    suspend fun getTreeGraph(
-        treeId: String,
-        targetPersonId: String,
-        depth: Int,
-        preview: Boolean,
-    ): ApiResult<TreeGraph>
-
     suspend fun getTreeList(): ApiResult<List<Tree>>
     suspend fun deleteTree(treeId: String): ApiResult<Unit>
     suspend fun updateTree(
         treeId: String,
         body: TreeRequest,
     ): ApiResult<Tree>
+
+    suspend fun getOptimizedTreeGraph(
+        treeId: String,
+        targetPersonId: String,
+        depth: Int,
+    ): ApiResult<TreeGraph>
 
     suspend fun exportGedcom(treeId: String): ApiResult<Unit>
     suspend fun importGedcom(treeId: String): ApiResult<Unit>

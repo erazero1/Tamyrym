@@ -24,6 +24,7 @@ fun NavGraphBuilder.treeGraph(modifier: Modifier = Modifier, navController: NavH
         composable<Screen.TreeCanvas> { navBackStackEntry ->
             val route = navBackStackEntry.toRoute<Screen.TreeCanvas>()
             TreeCanvasScreen(
+                modifier = modifier,
                 treeId = route.treeId,
             )
         }

@@ -19,12 +19,11 @@ interface TreeApi {
     @POST("api/v1/genealogy/tree") // OK
     suspend fun createTree(@Body body: TreeRequestDTO): ApiResult<TreeDTO>
 
-    @GET("api/v1/genealogy/tree/graph")
-    suspend fun getTreeGraph(
+    @GET("api/v2/genealogy/tree/graph")
+    suspend fun getOptimizedTreeGraph(
         @Query("tree_id") treeId: String,
         @Query("target_person_id") targetPersonId: String,
         @Query("depth") depth: Int,
-        @Query("preview") preview: Boolean,
     ): ApiResult<TreeGraphDTO>
 
     @GET("api/v1/genealogy/tree/list")

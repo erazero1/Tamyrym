@@ -1,23 +1,29 @@
 package feature.tree.data.model
 
+import com.google.gson.annotations.SerializedName
 import feature.tree.domain.model.TreeGraph
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class TreeGraphDTO(
-    @SerialName("links")
-    val links: List<LinkDTO?>?,
-    @SerialName("persons")
-    val persons: List<PersonExtDTO?>?,
-    @SerialName("unions")
-    val unions: List<UnionDTO?>?,
+    @SerializedName("persons")
+    val persons: List<PersonInfoDTO>? = null,
+
+    @SerializedName("root_person_ids")
+    val rootPersonIds: List<String>? = null,
+
+    @SerializedName("slice")
+    val slice: SliceDTO? = null,
+
+    @SerializedName("unions")
+    val unions: List<UnionDTO>? = null,
 )
 
 fun TreeGraphDTO.toDomain(): TreeGraph {
     return TreeGraph(
-        links = this.links?.filterNotNull()?.map { it.toDomain() } ?: emptyList(),
-        persons = this.persons?.filterNotNull()?.map { it.toDomain() } ?: emptyList(),
-        unions = this.unions?.filterNotNull()?.map { it.toDomain() } ?: emptyList()
+        persons = this.persons?.map { it.toDomain() } ?: emptyList(),
+        rootPersonIds = this.rootPersonIds ?: emptyList(),
+        slice = this.slice?.toDomain(),
+        unions = this.unions?.map { it.toDomain() } ?: emptyList()
     )
 }

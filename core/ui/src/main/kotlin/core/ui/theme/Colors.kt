@@ -42,7 +42,9 @@ internal fun lightColorScheme(): ColorScheme {
         menuIconRed = Color(0xFFDC143C),
         successPrimaryContainer = Color(0xFFC8E6C9),
         successOnPrimaryContainer = Color(0xFF1B5E20),
-        link = Color(0xFF00838F)
+        link = Color(0xFF00838F),
+        male = Color(0xFF2A6FDB),
+        female = Color(0xFFD64F8E)
     )
 }
 
@@ -81,7 +83,9 @@ internal fun darkColorScheme(): ColorScheme {
         menuIconRed = Color(0xFFE95656),
         successPrimaryContainer = Color(0xFF1B5E20),
         successOnPrimaryContainer = Color(0xFFC8E6C9),
-        link = Color(0xFF00838F)
+        link = Color(0xFF00838F),
+        male = Color(0xFF2A6FDB),
+        female = Color(0xFFD64F8E)
     )
 }
 
@@ -116,6 +120,8 @@ data class ColorScheme(
     val outline: Color,
     val menuIconRed: Color,
     val link: Color,
+    val male: Color,
+    val female: Color,
 )
 
 internal fun ColorScheme.toM3ColorScheme(): M3ColorScheme {

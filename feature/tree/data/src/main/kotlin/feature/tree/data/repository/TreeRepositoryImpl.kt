@@ -19,20 +19,6 @@ class TreeRepositoryImpl(
         return treeApi.createTree(body = body.toDTO()).map { it.toDomain() }
     }
 
-    override suspend fun getTreeGraph(
-        treeId: String,
-        targetPersonId: String,
-        depth: Int,
-        preview: Boolean,
-    ): ApiResult<TreeGraph> {
-        return treeApi.getTreeGraph(
-            treeId = treeId,
-            targetPersonId = targetPersonId,
-            depth = depth,
-            preview = preview,
-        ).map { it.toDomain() }
-    }
-
     override suspend fun getTreeList(): ApiResult<List<Tree>> {
         return treeApi.getTreeList().map { it.toDomain() }
     }
@@ -48,6 +34,18 @@ class TreeRepositoryImpl(
         return treeApi.updateTree(
             treeId = treeId,
             body = body.toDTO(),
+        ).map { it.toDomain() }
+    }
+
+    override suspend fun getOptimizedTreeGraph(
+        treeId: String,
+        targetPersonId: String,
+        depth: Int,
+    ): ApiResult<TreeGraph> {
+        return treeApi.getOptimizedTreeGraph(
+            treeId = treeId,
+            targetPersonId = targetPersonId,
+            depth = depth
         ).map { it.toDomain() }
     }
 

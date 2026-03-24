@@ -1,41 +1,42 @@
 package feature.tree.data.model
 
-import com.erazero1.utils.toInstantOrNull
+import com.google.gson.annotations.SerializedName
 import core.domain.model.UnionType
 import feature.tree.domain.model.Union
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.time.Instant
 
 @Serializable
 data class UnionDTO(
-    @SerialName("end_date")
-    val endDate: String?,
-    @SerialName("id")
-    val id: String?,
-    @SerialName("person_1_id")
-    val person1Id: String?,
-    @SerialName("person_2_id")
-    val person2Id: String?,
-    @SerialName("place")
-    val place: String?,
-    @SerialName("start_date")
-    val startDate: String?,
-    @SerialName("start_date_string")
-    val startDateString: String?,
-    @SerialName("union_type")
-    val unionType: String?
+    @SerializedName("children_ids")
+    val childrenIds: List<String>? = null,
+
+    @SerializedName("generation")
+    val generation: Int? = null,
+
+    @SerializedName("id")
+    val id: String? = null,
+
+    @SerializedName("is_virtual")
+    val isVirtual: Boolean? = null,
+
+    @SerializedName("person_1_id")
+    val person1Id: String? = null,
+
+    @SerializedName("person_2_id")
+    val person2Id: String? = null,
+
+    @SerializedName("type")
+    val type: String? = null,
 )
 
 fun UnionDTO.toDomain(): Union {
     return Union(
-        endDate = this.endDate.toInstantOrNull() ?: Instant.now(),
         id = this.id.orEmpty(),
+        type = UnionType.findValue(this.type),
+        generation = this.generation ?: 0,
+        isVirtual = this.isVirtual ?: false,
         person1Id = this.person1Id.orEmpty(),
         person2Id = this.person2Id.orEmpty(),
-        place = this.place.orEmpty(),
-        startDate = this.startDate.toInstantOrNull() ?: Instant.now(),
-        startDateString = this.startDateString.orEmpty(),
-        unionType = UnionType.findValue(this.unionType)
+        childrenIds = this.childrenIds ?: emptyList()
     )
 }

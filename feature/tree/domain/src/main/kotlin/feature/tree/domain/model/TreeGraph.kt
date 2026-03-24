@@ -1,15 +1,7 @@
 package feature.tree.domain.model
-
 data class TreeGraph(
-    val links: List<Link>,
-    val persons: List<PersonExt>,
-    val unions: List<Union>
-) {
-    companion object {
-        fun init() = TreeGraph(
-            links = emptyList(),
-            persons = emptyList(),
-            unions = emptyList()
-        )
-    }
-}
+    val persons: List<PersonInfo>,
+    val rootPersonIds: List<String>,
+    val slice: Slice?,
+    val unions: List<Union>,
+)
