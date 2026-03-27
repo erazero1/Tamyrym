@@ -9,6 +9,7 @@ import feature.tree.domain.model.TreeRequest
 import feature.tree.domain.usecase.CreateNewTreeUseCase
 import feature.tree.domain.usecase.GetTreeListUseCase
 import feature.tree.domain.usecase.UpdateTreeUseCase
+import feature.tree.domain.usecase.ai.AnalyzeTreeUseCase
 import feature.tree.ui.tree_list.model.TreeListAction
 import feature.tree.ui.tree_list.model.TreeListEvent
 import feature.tree.ui.tree_list.model.TreeListState
@@ -25,6 +26,7 @@ class TreeListViewModel(
     private val getTreeListUseCase: GetTreeListUseCase,
     private val createNewTreeUseCase: CreateNewTreeUseCase,
     private val updateTreeUseCase: UpdateTreeUseCase,
+    private val analyzeTreeUseCase: AnalyzeTreeUseCase,
 ) : ViewModel() {
     private val _state: MutableStateFlow<TreeListState> = MutableStateFlow(TreeListState.Initial)
     internal val state: StateFlow<TreeListState> = _state.asStateFlow()
@@ -45,6 +47,26 @@ class TreeListViewModel(
                 name = event.name,
                 description = event.description,
             )
+
+            is TreeListEvent.AnalyzeTree -> analyzeTree(event.treeId)
+        }
+    }
+
+    private fun analyzeTree(treeId: String) {
+        val currentState = _state.value as? TreeListState.Success ?: return
+
+        _state.update { currentState.copy(isAnalyzing = true) }
+
+        viewModelScope.launch {
+            analyzeTreeUseCase(treeId)
+                .onSuccess { result ->
+                    _state.update { currentState.copy(isAnalyzing = false) }
+                    _action.send(TreeListAction.ShowAnalysisResult(result))
+                }
+                .onError { _, message, _ ->
+                    _state.update { currentState.copy(isAnalyzing = false) }
+                    _action.send(TreeListAction.ShowToast(message))
+                }
         }
     }
 

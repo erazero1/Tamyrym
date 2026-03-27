@@ -5,4 +5,5 @@ internal sealed interface TreeListEvent {
     data class CreateNewTree(val name: String, val description: String) : TreeListEvent
     data class UpdateTree(val treeId: String, val name: String, val description: String) :
         TreeListEvent
+    data class AnalyzeTree(val treeId: String) : TreeListEvent
 }

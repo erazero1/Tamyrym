@@ -2,7 +2,7 @@ package feature.tree.ui.tree_list.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +34,7 @@ internal fun TreeCard(
     tree: Tree,
     onClick: () -> Unit,
     onEditClick: () -> Unit,
+    onAnalyzeClick: (String) -> Unit,
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -43,8 +44,9 @@ internal fun TreeCard(
                 color = AppTheme.colors.primaryContainer,
                 shape = AppTheme.shapes.small
             )
-            .clickable(
+            .combinedClickable(
                 onClick = onClick,
+                onLongClick = { isExpanded = true }
             )
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -111,6 +113,26 @@ internal fun TreeCard(
                             modifier = Modifier.size(24.dp)
                         )
                     },
+                )
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            stringResource(R.string.ai_analysis),
+                            color = AppTheme.colors.onSecondaryContainer
+                        )
+                    },
+                    onClick = {
+                        isExpanded = false
+                        onAnalyzeClick(tree.id)
+                    },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_star_shine),
+                            contentDescription = null,
+                            tint = AppTheme.colors.onSurface,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
                 )
             }
         }

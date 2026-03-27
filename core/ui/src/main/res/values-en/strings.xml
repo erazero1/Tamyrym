@@ -79,4 +79,7 @@
     <string name="tree_is_empty_title">Tree is empty</string>
     <string name="tree_is_empty_description">Start your family history by adding the first person</string>
     <string name="add_first_person">Add the first person</string>
+    <string name="ai_analysis">AI Analysis</string>
+    <string name="ok">Okay</string>
+    <string name="ai_analysis_result">AI Analysis results</string>
 </resources>

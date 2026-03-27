@@ -29,6 +29,8 @@ import core.ui.uikit.components.LoadingCard
 import core.ui.uikit.effects.SingleEventEffect
 import core.ui.utils.showLongToast
 import feature.tree.domain.model.Tree
+import feature.tree.domain.model.ai.TreeAnalysisResult
+import feature.tree.ui.tree_list.components.AnalysisResultDialog
 import feature.tree.ui.tree_list.components.TreeCard
 import feature.tree.ui.tree_list.components.TreeCreationDialog
 import feature.tree.ui.tree_list.model.TreeDialogState
@@ -47,6 +49,7 @@ internal fun TreeListScreen(
     val viewModel: TreeListViewModel = koinViewModel()
     val state = viewModel.state.collectAsState()
     var dialogState by remember { mutableStateOf<TreeDialogState?>(null) }
+    var analysisResultState by remember { mutableStateOf<TreeAnalysisResult?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.onEvent(TreeListEvent.LoadTreeList)
@@ -61,6 +64,8 @@ internal fun TreeListScreen(
             is TreeListAction.ShowToast -> {
                 showLongToast(context, action.message ?: context.getString(R.string.unknown_error))
             }
+
+            is TreeListAction.ShowAnalysisResult -> analysisResultState = action.result
         }
     }
 
@@ -100,6 +105,13 @@ internal fun TreeListScreen(
         )
     }
 
+    analysisResultState?.let { result ->
+        AnalysisResultDialog(
+            result = result,
+            onDismiss = { analysisResultState = null }
+        )
+    }
+
     TreeListLayout(
         modifier = modifier,
         state = state.value,
@@ -109,6 +121,9 @@ internal fun TreeListScreen(
         },
         onEditTree = { treeId, initialName, initialDescription ->
             dialogState = TreeDialogState.Edit(treeId, initialName, initialDescription)
+        },
+        onAnalyzeTree = { treeId ->
+            viewModel.onEvent(TreeListEvent.AnalyzeTree(treeId))
         },
         onEvent = viewModel::onEvent,
     )
@@ -121,6 +136,7 @@ private fun TreeListLayout(
     onCreateNewTree: () -> Unit,
     onEditTree: (String, String, String) -> Unit,
     onNavigateToTree: (treeId: String) -> Unit,
+    onAnalyzeTree: (String) -> Unit,
     onEvent: (TreeListEvent) -> Unit,
 ) {
     when (state) {
@@ -137,6 +153,7 @@ private fun TreeListLayout(
             trees = state.trees,
             onCreateNewTree = onCreateNewTree,
             onEditTree = onEditTree,
+            onAnalyzeTree = onAnalyzeTree,
             onNavigateToTree = onNavigateToTree,
         )
     }
@@ -148,6 +165,7 @@ private fun TreeListContent(
     trees: List<Tree>,
     onCreateNewTree: () -> Unit,
     onEditTree: (treeId: String, currentName: String, currentDescription: String) -> Unit,
+    onAnalyzeTree: (String) -> Unit,
     onNavigateToTree: (treeId: String) -> Unit,
 ) {
     Scaffold(
@@ -188,7 +206,8 @@ private fun TreeListContent(
                             tree.name,
                             tree.description,
                         )
-                    }
+                    },
+                    onAnalyzeClick = onAnalyzeTree
                 )
             }
         }

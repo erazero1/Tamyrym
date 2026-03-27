@@ -79,4 +79,7 @@
     <string name="tree_is_empty_title">Шежіре бос</string>
     <string name="tree_is_empty_description">Алғашқы адамды қосу арқылы өз отбасыңыздың тарихын бастаңыз</string>
     <string name="add_first_person">Алғашқы адамды қосу</string>
+    <string name="ai_analysis">ЖИ талдау</string>
+    <string name="ok">Түсінікті</string>
+    <string name="ai_analysis_result">ЖИ талдауының нәтижесі</string>
 </resources>

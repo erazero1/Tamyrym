@@ -1,10 +1,13 @@
 package feature.tree.di
 
 import feature.tree.data.remote.PersonApi
+import feature.tree.data.remote.TreeAiApi
 import feature.tree.data.remote.TreeApi
 import feature.tree.data.repository.PersonRepositoryImpl
+import feature.tree.data.repository.TreeAnalysisRepositoryImpl
 import feature.tree.data.repository.TreeRepositoryImpl
 import feature.tree.domain.repository.PersonRepository
+import feature.tree.domain.repository.TreeAnalysisRepository
 import feature.tree.domain.repository.TreeRepository
 import feature.tree.domain.usecase.AddRelationToPersonUseCase
 import feature.tree.domain.usecase.CreateNewTreeUseCase
@@ -17,10 +20,11 @@ import feature.tree.domain.usecase.GetTreeListUseCase
 import feature.tree.domain.usecase.GetTreePersonsUseCase
 import feature.tree.domain.usecase.UpdatePersonUseCase
 import feature.tree.domain.usecase.UpdateTreeUseCase
+import feature.tree.domain.usecase.ai.AnalyzeTreeUseCase
 import feature.tree.ui.person_detail.PersonDetailViewModel
 import feature.tree.ui.tree_canvas.TreeCanvasViewModel
 import feature.tree.ui.tree_list.TreeListViewModel
-import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -31,6 +35,9 @@ val treeModule = module {
     }
     single<PersonApi> {
         get<Retrofit>().create(PersonApi::class.java)
+    }
+    single<TreeAiApi> {
+        get<Retrofit>().create(TreeAiApi::class.java)
     }
 
     single<TreeRepository> {
@@ -44,6 +51,11 @@ val treeModule = module {
             personApi = get<PersonApi>(),
         )
     }
+    single<TreeAnalysisRepository> {
+        TreeAnalysisRepositoryImpl(api = get<TreeAiApi>())
+    }
+    factoryOf(::AnalyzeTreeUseCase)
+
     factory<GetPersonsByTreeId> {
         GetPersonsByTreeId(repository = get<PersonRepository>())
     }
@@ -79,19 +91,9 @@ val treeModule = module {
     }
 
     // ViewModels
-    viewModel<TreeListViewModel> {
-        TreeListViewModel(
-            getTreeListUseCase = get<GetTreeListUseCase>(),
-            createNewTreeUseCase = get<CreateNewTreeUseCase>(),
-            updateTreeUseCase = get<UpdateTreeUseCase>(),
-        )
-    }
+    viewModelOf(::TreeListViewModel)
 
     viewModelOf(::TreeCanvasViewModel)
 
-    viewModel<PersonDetailViewModel> {
-        PersonDetailViewModel(
-            getPersonUseCase = get<GetPersonUseCase>(),
-        )
-    }
+    viewModelOf(::PersonDetailViewModel)
 }

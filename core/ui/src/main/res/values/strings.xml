@@ -81,4 +81,7 @@
     <string name="tree_is_empty_title">Дерево пустое</string>
     <string name="tree_is_empty_description">Начните историю своей семьи, добавив первого человека</string>
     <string name="add_first_person">Добавить первого человека</string>
+    <string name="ai_analysis">Анализ ИИ</string>
+    <string name="ok">Понятно</string>
+    <string name="ai_analysis_result">Результаты ИИ анализа</string>
 </resources>
