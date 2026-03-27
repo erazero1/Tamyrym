@@ -142,26 +142,26 @@ private fun ProfileContent(
 
         Spacer(modifier = Modifier)
 
-        Option(
-            modifier = Modifier.fillMaxWidth(),
-            text = stringResource(R.string.notifications),
-            iconId = R.drawable.notifications_24px,
-            onClick = {
-                TODO()
-            })
-        Option(
-            modifier = Modifier.fillMaxWidth(),
-            text = stringResource(R.string.language),
-            iconId = R.drawable.language_24px,
-            onClick = {
-                TODO()
-            })
-        Option(
-            modifier = Modifier.fillMaxWidth(),
-            text = stringResource(R.string.dark_mode),
-            iconId = R.drawable.dark_mode_24px,
-            onClick = {
-                TODO()
-            })
+//        Option(
+//            modifier = Modifier.fillMaxWidth(),
+//            text = stringResource(R.string.notifications),
+//            iconId = R.drawable.notifications_24px,
+//            onClick = {
+//                TODO()
+//            })
+//        Option(
+//            modifier = Modifier.fillMaxWidth(),
+//            text = stringResource(R.string.language),
+//            iconId = R.drawable.language_24px,
+//            onClick = {
+//                TODO()
+//            })
+//        Option(
+//            modifier = Modifier.fillMaxWidth(),
+//            text = stringResource(R.string.dark_mode),
+//            iconId = R.drawable.dark_mode_24px,
+//            onClick = {
+//                TODO()
+//            })
     }
 }
