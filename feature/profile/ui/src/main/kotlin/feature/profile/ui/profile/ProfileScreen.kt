@@ -1,5 +1,6 @@
 package feature.profile.ui.profile
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -31,8 +32,10 @@ import feature.profile.ui.profile.model.ProfileEvent
 import feature.profile.ui.profile.model.ProfileState
 import org.koin.androidx.compose.koinViewModel
 
+@SuppressLint("LocalContextGetResourceValueCall")
 @Composable
 internal fun ProfileScreen(
+    modifier: Modifier = Modifier,
     onLogoutClick: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -57,6 +60,7 @@ internal fun ProfileScreen(
     }
 
     ProfileLayout(
+        modifier = modifier,
         state = state.value,
         onEvent = viewModel::onEvent,
     )
@@ -70,6 +74,7 @@ private fun ProfileLayout(
     onEvent: (ProfileEvent) -> Unit,
 ) {
     Scaffold(
+        modifier = modifier.fillMaxSize(),
         topBar = {
             AppBar()
         },

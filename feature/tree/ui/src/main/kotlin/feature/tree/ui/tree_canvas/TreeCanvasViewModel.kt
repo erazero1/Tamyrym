@@ -4,11 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import core.domain.result.onSuccess
 import feature.tree.domain.usecase.GetOptimizedTreeGraphUseCase
+import feature.tree.ui.tree_canvas.model.TreeCanvasAction
 import feature.tree.ui.tree_canvas.model.TreeCanvasEvent
 import feature.tree.ui.tree_canvas.model.TreeCanvasState
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -18,6 +22,9 @@ class TreeCanvasViewModel(
     private val _state: MutableStateFlow<TreeCanvasState> =
         MutableStateFlow(TreeCanvasState.Initial)
     internal val state: StateFlow<TreeCanvasState> = _state.asStateFlow()
+
+    private val _action: Channel<TreeCanvasAction> = Channel(capacity = Channel.BUFFERED)
+    internal val action: Flow<TreeCanvasAction> = _action.receiveAsFlow()
 
     internal fun onEvent(event: TreeCanvasEvent) {
         when (event) {

@@ -11,4 +11,5 @@ data class User(
     val lastName: String,
     val role: Role,
     val userStatus: UserStatus,
+    val photoUrl: String?,
 )

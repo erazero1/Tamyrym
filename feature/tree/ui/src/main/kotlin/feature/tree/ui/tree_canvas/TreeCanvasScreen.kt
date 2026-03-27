@@ -36,6 +36,7 @@ import kotlin.math.roundToInt
 internal fun TreeCanvasScreen(
     modifier: Modifier = Modifier,
     treeId: String,
+    onPersonClick: (String) -> Unit,
 ) {
     val viewModel: TreeCanvasViewModel = koinViewModel()
     val state = viewModel.state.collectAsState()
@@ -48,6 +49,7 @@ internal fun TreeCanvasScreen(
         modifier = modifier,
         state = state.value,
         treeId = treeId,
+        onPersonClick = onPersonClick,
         onEvent = viewModel::onEvent,
     )
 }
@@ -57,6 +59,7 @@ private fun TreeCanvasLayout(
     modifier: Modifier = Modifier,
     state: TreeCanvasState,
     treeId: String,
+    onPersonClick: (String) -> Unit,
     onEvent: (TreeCanvasEvent) -> Unit,
 ) {
     when (state) {
@@ -71,6 +74,8 @@ private fun TreeCanvasLayout(
         is TreeCanvasState.Success -> TreeCanvasContent(
             modifier = modifier,
             tree = state.treeGraph,
+            onPersonClick = onPersonClick,
+            onEvent = onEvent,
         )
     }
 }
@@ -80,6 +85,8 @@ private fun TreeCanvasContent(
     modifier: Modifier = Modifier,
     tree: TreeGraph,
     config: LayoutConfig = LayoutConfig(),
+    onPersonClick: (String) -> Unit,
+    onEvent: (TreeCanvasEvent) -> Unit,
 ) {
     // ── Run layout engine ─────────────────────────────────────────────────
     val density = LocalDensity.current
@@ -184,6 +191,9 @@ private fun TreeCanvasContent(
                     config = pixelConfig,
                     modifier = Modifier.offset {
                         IntOffset(pos.x.roundToInt(), pos.y.roundToInt())
+                    },
+                    onCardClick = { personId ->
+                        onPersonClick(personId)
                     }
                 )
             }

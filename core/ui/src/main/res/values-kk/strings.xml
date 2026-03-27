@@ -57,4 +57,5 @@
     <string name="finish_registration">Тіркелуді аяқтау</string>
     <string name="fill_all_fields">Барлық өрістерді толтырыңыз</string>
     <string name="prefer_not_to_say">Айтпауды жөн көремін</string>
+    <string name="person_created_date_and_id">%s ЖАСАЛДЫ | ID: %s</string>
 </resources>

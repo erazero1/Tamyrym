@@ -19,4 +19,6 @@ data class UserDTO(
     val role: String?,
     @SerializedName("status")
     val userStatus: String?,
+    @SerializedName("attrs")
+    val attrs: Map<String, String>?,
 )

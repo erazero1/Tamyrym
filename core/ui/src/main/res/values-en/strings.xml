@@ -57,4 +57,13 @@
     <string name="finish_registration">Finish registration</string>
     <string name="fill_all_fields">Please, fill all fields</string>
     <string name="prefer_not_to_say">Prefer not to say</string>
+    <string name="biography">Biography</string>
+    <string name="status">Status</string>
+    <string name="alive">Alive</string>
+    <string name="deceased">Deceased</string>
+    <string name="present">Present</string>
+    <string name="life_events">Life events</string>
+    <string name="born">Born</string>
+    <string name="died">Died</string>
+    <string name="person_created_date_and_id">CREATED %s | ID: %s</string>
 </resources>

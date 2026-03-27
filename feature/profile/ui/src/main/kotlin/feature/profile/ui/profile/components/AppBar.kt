@@ -24,7 +24,7 @@ internal fun AppBar(
             )
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = AppTheme.colors.surfaceDim,
+            containerColor = AppTheme.colors.surface,
             titleContentColor = AppTheme.colors.onSurface,
         ),
     )

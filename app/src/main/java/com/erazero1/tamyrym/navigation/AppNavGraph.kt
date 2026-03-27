@@ -41,7 +41,7 @@ internal fun AppNavGraph(
         }
         authGraph(navController = navController)
         treeGraph(modifier = modifier, navController = navController)
-        profileGraph(navController = navController)
+        profileGraph(modifier = modifier, navController = navController)
         composable<Route.Home> {
             Box(
                 modifier = Modifier.fillMaxSize(),

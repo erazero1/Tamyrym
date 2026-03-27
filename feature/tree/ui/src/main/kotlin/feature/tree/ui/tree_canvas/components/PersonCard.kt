@@ -2,6 +2,7 @@ package feature.tree.ui.tree_canvas.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ internal fun PersonCard(
     person: PersonInfo,
     config: LayoutConfig,
     modifier: Modifier = Modifier,
+    onCardClick: (String) -> Unit,
 ) {
     val density = LocalDensity.current
     val accentColor = when (person.gender) {
@@ -52,6 +54,9 @@ internal fun PersonCard(
                 color = accentColor.copy(alpha = 0.6f),
                 shape = AppTheme.shapes.medium
             )
+            .clickable {
+                onCardClick(person.id)
+            }
     ) {
         // Accent stripe on the left
         Box(

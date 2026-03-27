@@ -59,4 +59,13 @@
     <string name="finish_registration">Завершить регистрацию</string>
     <string name="fill_all_fields">Заполните все поля</string>
     <string name="prefer_not_to_say">Не указывать</string>
+    <string name="biography">Биография</string>
+    <string name="status">Статус</string>
+    <string name="alive">Жив</string>
+    <string name="deceased">Умер</string>
+    <string name="present">Наст. время</string>
+    <string name="life_events">Жизненные события</string>
+    <string name="born">Рождён</string>
+    <string name="died">Умер</string>
+    <string name="person_created_date_and_id">СОЗДАН %s | ID: %s</string>
 </resources>

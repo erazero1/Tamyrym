@@ -1,10 +1,9 @@
 package feature.tree.ui.tree_list
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -38,6 +37,7 @@ import feature.tree.ui.tree_list.model.TreeListEvent
 import feature.tree.ui.tree_list.model.TreeListState
 import org.koin.androidx.compose.koinViewModel
 
+@SuppressLint("LocalContextGetResourceValueCall")
 @Composable
 internal fun TreeListScreen(
     modifier: Modifier = Modifier,
@@ -168,10 +168,11 @@ private fun TreeListContent(
                 )
             }
         },
-        contentWindowInsets = WindowInsets.navigationBars,
-    ) {
+    ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             items(trees) { tree ->

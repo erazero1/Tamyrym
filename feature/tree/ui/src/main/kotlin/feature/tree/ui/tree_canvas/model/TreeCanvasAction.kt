@@ -1,4 +1,4 @@
 package feature.tree.ui.tree_canvas.model
 
-interface TreeCanvasAction {
+internal sealed interface TreeCanvasAction {
 }

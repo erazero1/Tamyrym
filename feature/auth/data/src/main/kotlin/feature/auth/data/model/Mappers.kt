@@ -15,6 +15,7 @@ fun UserDTO.toDomain(): User {
         id = id.orEmpty(),
         lastName = lastName.orEmpty(),
         role = Role.findRole(role),
-        userStatus = UserStatus.findStatus(userStatus)
+        userStatus = UserStatus.findStatus(userStatus),
+        photoUrl = attrs?.getValue("picture_url"),
     )
 }

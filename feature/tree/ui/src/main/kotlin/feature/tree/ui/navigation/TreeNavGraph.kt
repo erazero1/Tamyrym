@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import core.ui.navigation.Route
+import feature.tree.ui.person_detail.PersonDetailScreen
 import feature.tree.ui.tree_canvas.TreeCanvasScreen
 import feature.tree.ui.tree_list.TreeListScreen
 
@@ -26,6 +27,23 @@ fun NavGraphBuilder.treeGraph(modifier: Modifier = Modifier, navController: NavH
             TreeCanvasScreen(
                 modifier = modifier,
                 treeId = route.treeId,
+                onPersonClick = { personId ->
+                    navController.navigate(Screen.PersonDetail(personId))
+                }
+            )
+        }
+
+        composable<Screen.PersonDetail> { navBackStackEntry ->
+            val route = navBackStackEntry.toRoute<Screen.PersonDetail>()
+            PersonDetailScreen(
+                modifier = modifier,
+                personId = route.personId,
+                onEdit = { personId ->
+                    TODO()
+                },
+                onBack = {
+                    navController.popBackStack()
+                }
             )
         }
     }

@@ -92,6 +92,8 @@ class TreeListViewModel(
     }
 
     private fun loadTreeList() {
+        if (_state.value is TreeListState.Loading) return
+        _state.update { TreeListState.Loading }
         viewModelScope.launch {
             getTreeListUseCase().onSuccess { trees ->
                 _state.update {

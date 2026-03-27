@@ -1,12 +1,15 @@
 package com.erazero1.tamyrym
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
@@ -27,6 +30,7 @@ import core.ui.theme.AppTheme
 import core.ui.utils.showShortToast
 
 class MainActivity : ComponentActivity() {
+    @SuppressLint("LocalContextGetResourceValueCall")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -46,7 +50,9 @@ class MainActivity : ComponentActivity() {
                         if (showBottomBar) {
                             AppBottomBar(navController = navController)
                         }
-                    }) { innerPadding ->
+                    },
+                    contentWindowInsets = WindowInsets.navigationBars
+                ) { innerPadding ->
                     var backPressedTime by remember { mutableLongStateOf(0L) }
                     val context = LocalContext.current
 

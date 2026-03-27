@@ -6,7 +6,7 @@ import feature.tree.domain.model.TreeGraph
 import feature.tree.domain.model.Union
 
 
-data class LayoutConfig(
+internal data class LayoutConfig(
     val nodeWidth: Float = 160f,
     val nodeHeight: Float = 80f,
     val horizontalSpacing: Float = 64f,
@@ -26,7 +26,7 @@ data class LayoutConfig(
  * - [cyclicLinks] — union/person IDs detected to form graph cycles; rendered
  *                    with a dashed "cyclic" line instead of a normal branch.
  */
-data class LayoutResult(
+internal data class LayoutResult(
     val positions: Map<String, Offset>,
     val cyclicLinks: Set<String>,
 )
@@ -43,7 +43,7 @@ data class LayoutResult(
  *
  * Time complexity: O(V + E).
  */
-class TreeLayoutEngine(private val config: LayoutConfig = LayoutConfig()) {
+internal class TreeLayoutEngine(private val config: LayoutConfig = LayoutConfig()) {
 
     // ── internal state (reset on every calculate() call) ──────────────────
 

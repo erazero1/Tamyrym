@@ -9,4 +9,7 @@ internal sealed interface Screen {
 
     @Serializable
     data class TreeCanvas(val treeId: String) : Screen
+
+    @Serializable
+    data class PersonDetail(val personId: String) : Screen
 }
