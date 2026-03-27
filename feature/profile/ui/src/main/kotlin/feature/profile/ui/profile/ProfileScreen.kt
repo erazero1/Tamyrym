@@ -125,13 +125,13 @@ private fun ProfileContent(
             onClick = {
                 TODO()
             })
-        Option(
-            modifier = Modifier.fillMaxWidth(),
-            text = stringResource(R.string.change_password),
-            iconId = R.drawable.password_24px,
-            onClick = {
-                TODO()
-            })
+//        Option(
+//            modifier = Modifier.fillMaxWidth(),
+//            text = stringResource(R.string.change_password),
+//            iconId = R.drawable.password_24px,
+//            onClick = {
+//                TODO()
+//            })
         Option(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(R.string.logout),

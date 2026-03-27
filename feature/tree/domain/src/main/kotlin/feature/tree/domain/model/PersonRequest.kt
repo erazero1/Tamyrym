@@ -1,15 +1,12 @@
 package feature.tree.domain.model
 
 import core.domain.model.Gender
-import java.time.Instant
 
 data class PersonRequest(
     val biography: String,
-    val birthDate: Instant,
-    val birthDateString: String,
+    val birthDate: String,
     val birthPlace: String,
-    val deathDate: Instant,
-    val deathDateString: String,
+    val deathDate: String,
     val deathPlace: String,
     val firstName: String,
     val gender: Gender,
@@ -17,16 +14,14 @@ data class PersonRequest(
     val lastName: String,
     val maidenName: String,
     val patronymic: String,
-    val photoUrl: String
+    val photoUrl: String,
 ) {
     companion object {
         fun init() = PersonRequest(
             biography = "",
-            birthDate = Instant.now(),
-            birthDateString = "",
+            birthDate = "",
             birthPlace = "",
-            deathDate = Instant.now(),
-            deathDateString = "",
+            deathDate = "",
             deathPlace = "",
             firstName = "",
             gender = Gender.OTHER,

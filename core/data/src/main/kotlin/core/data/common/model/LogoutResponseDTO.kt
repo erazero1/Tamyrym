@@ -1,10 +1,10 @@
 package core.data.common.model
 
-import kotlinx.serialization.SerialName
+import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class LogoutResponseDTO(
-    @SerialName("message")
+    @SerializedName("message")
     val message: String?,
 )

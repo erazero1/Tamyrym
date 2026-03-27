@@ -21,6 +21,7 @@ import feature.tree.ui.person_detail.PersonDetailViewModel
 import feature.tree.ui.tree_canvas.TreeCanvasViewModel
 import feature.tree.ui.tree_list.TreeListViewModel
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
@@ -86,11 +87,7 @@ val treeModule = module {
         )
     }
 
-    viewModel<TreeCanvasViewModel> {
-        TreeCanvasViewModel(
-            getOptimizedTreeGraphUseCase = get<GetOptimizedTreeGraphUseCase>(),
-        )
-    }
+    viewModelOf(::TreeCanvasViewModel)
 
     viewModel<PersonDetailViewModel> {
         PersonDetailViewModel(

@@ -66,4 +66,17 @@
     <string name="born">Born</string>
     <string name="died">Died</string>
     <string name="person_created_date_and_id">CREATED %s | ID: %s</string>
+    <string name="add_relative">Add relative</string>
+    <string name="relation_type">Relation type</string>
+    <string name="patronymic">Patronymic</string>
+    <string name="maiden_name">Maiden name</string>
+    <string name="birth_date">Birth date</string>
+    <string name="birth_place">Birthplace</string>
+    <string name="is_alive">Is alive</string>
+    <string name="death_date">Death date</string>
+    <string name="death_place">Death place</string>
+    <string name="save">Save</string>
+    <string name="tree_is_empty_title">Tree is empty</string>
+    <string name="tree_is_empty_description">Start your family history by adding the first person</string>
+    <string name="add_first_person">Add the first person</string>
 </resources>

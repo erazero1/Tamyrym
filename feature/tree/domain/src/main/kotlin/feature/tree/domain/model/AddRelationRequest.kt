@@ -5,7 +5,7 @@ import core.domain.model.RelationType
 data class AddRelationRequest(
     val person: PersonRequest,
     val personIdToFocus: String,
-    val relationType: RelationType,
+    val relationType: RelationType? = null,
 ) {
     companion object {
         fun init() = AddRelationRequest(

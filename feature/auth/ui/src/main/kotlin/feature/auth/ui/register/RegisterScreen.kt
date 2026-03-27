@@ -39,12 +39,12 @@ import core.presentation.R
 import core.ui.theme.AppTheme
 import core.ui.uikit.components.ErrorCard
 import core.ui.uikit.components.LoadingCard
+import core.ui.uikit.components.SelectGenderSegmentedButton
 import core.ui.uikit.components.StepProgressBar
 import core.ui.uikit.components.YearPickerDialog
 import core.ui.uikit.effects.SingleEventEffect
 import core.ui.utils.showLongToast
 import feature.auth.ui.register.components.AppBar
-import feature.auth.ui.register.components.SelectGenderSegmentedButton
 import feature.auth.ui.register.model.RegisterAction
 import feature.auth.ui.register.model.RegisterEvent
 import feature.auth.ui.register.model.RegisterState

@@ -1,24 +1,24 @@
 package feature.tree.data.model
 
 import com.erazero1.utils.toInstantOrNull
+import com.google.gson.annotations.SerializedName
 import feature.tree.domain.model.Tree
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.time.Instant
 
 @Serializable
 data class TreeDTO(
-    @SerialName("created_at")
+    @SerializedName("created_at")
     val createdAt: String?,
-    @SerialName("description")
+    @SerializedName("description")
     val description: String?,
-    @SerialName("id")
+    @SerializedName("id")
     val id: String?,
-    @SerialName("name")
+    @SerializedName("name")
     val name: String?,
-    @SerialName("owner_id")
+    @SerializedName("owner_id")
     val ownerId: String?,
-    @SerialName("updated_at")
+    @SerializedName("updated_at")
     val updatedAt: String?,
 )
 

@@ -57,5 +57,26 @@
     <string name="finish_registration">Тіркелуді аяқтау</string>
     <string name="fill_all_fields">Барлық өрістерді толтырыңыз</string>
     <string name="prefer_not_to_say">Айтпауды жөн көремін</string>
-    <string name="person_created_date_and_id">%s ЖАСАЛДЫ | ID: %s</string>
+    <string name="biography">Өмірбаян</string>
+    <string name="status">Мәртебесі</string>
+    <string name="alive">Тірі</string>
+    <string name="deceased">Қайтыс болған</string>
+    <string name="present">Қазіргі</string>
+    <string name="life_events">Өмірлік оқиғалар</string>
+    <string name="born">Туған</string>
+    <string name="died">Қайтыс болған</string>
+    <string name="person_created_date_and_id">ЖАСАЛҒАН КҮНІ %s | ID: %s</string>
+    <string name="add_relative">Туысты қосу</string>
+    <string name="relation_type">Туыстық байланыс түрі</string>
+    <string name="patronymic">Әкесінің аты</string>
+    <string name="maiden_name">Қыз күніндегі тегі</string>
+    <string name="birth_date">Туған күні</string>
+    <string name="birth_place">Туған жері</string>
+    <string name="is_alive">Көзі тірі</string>
+    <string name="death_date">Қайтыс болған күні</string>
+    <string name="death_place">Қайтыс болған жері</string>
+    <string name="save">Сақтау</string>
+    <string name="tree_is_empty_title">Шежіре бос</string>
+    <string name="tree_is_empty_description">Алғашқы адамды қосу арқылы өз отбасыңыздың тарихын бастаңыз</string>
+    <string name="add_first_person">Алғашқы адамды қосу</string>
 </resources>

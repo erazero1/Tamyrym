@@ -1,4 +1,4 @@
-package feature.auth.ui.register.components
+package core.ui.uikit.components
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon

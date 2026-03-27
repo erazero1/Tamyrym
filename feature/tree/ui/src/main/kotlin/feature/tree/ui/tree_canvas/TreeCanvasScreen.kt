@@ -5,10 +5,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.TransformOrigin
@@ -21,17 +30,23 @@ import core.presentation.R
 import core.ui.theme.AppTheme
 import core.ui.uikit.components.ErrorCard
 import core.ui.uikit.components.LoadingCard
+import core.ui.uikit.effects.SingleEventEffect
+import feature.tree.domain.model.AddRelationRequest
 import feature.tree.domain.model.TreeGraph
+import feature.tree.ui.tree_canvas.components.AddRelativeBottomSheet
+import feature.tree.ui.tree_canvas.components.EmptyTreeState
 import feature.tree.ui.tree_canvas.components.PersonCard
 import feature.tree.ui.tree_canvas.components.ZoomableCanvas
 import feature.tree.ui.tree_canvas.components.drawFamilyLines
 import feature.tree.ui.tree_canvas.model.LayoutConfig
+import feature.tree.ui.tree_canvas.model.TreeCanvasAction
 import feature.tree.ui.tree_canvas.model.TreeCanvasEvent
 import feature.tree.ui.tree_canvas.model.TreeCanvasState
 import feature.tree.ui.tree_canvas.model.TreeLayoutEngine
 import org.koin.androidx.compose.koinViewModel
 import kotlin.math.roundToInt
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun TreeCanvasScreen(
     modifier: Modifier = Modifier,
@@ -39,19 +54,75 @@ internal fun TreeCanvasScreen(
     onPersonClick: (String) -> Unit,
 ) {
     val viewModel: TreeCanvasViewModel = koinViewModel()
-    val state = viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    var showAddFirstPersonSheet by remember { mutableStateOf(false) }
+
+    SingleEventEffect(viewModel.action) { action ->
+        when (action) {
+            is TreeCanvasAction.ShowSnackbar -> {
+                snackbarHostState.showSnackbar(action.message)
+            }
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.onEvent(TreeCanvasEvent.LoadTreeGraph(treeId))
     }
 
-    TreeCanvasLayout(
-        modifier = modifier,
-        state = state.value,
-        treeId = treeId,
-        onPersonClick = onPersonClick,
-        onEvent = viewModel::onEvent,
-    )
+    Box(modifier = modifier.fillMaxSize()) {
+        TreeCanvasLayout(
+            modifier = Modifier.fillMaxSize(),
+            state = state,
+            treeId = treeId,
+            onPersonClick = { personId ->
+                onPersonClick(personId)
+            },
+            onCardLongClick = { personId ->
+                viewModel.onEvent(TreeCanvasEvent.SelectPerson(personId))
+            },
+            onAddFirstPersonClick = {
+                showAddFirstPersonSheet = true
+            },
+            onEvent = viewModel::onEvent,
+        )
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
+    }
+    val successState = state as? TreeCanvasState.Success
+    val isAddingRelative = successState?.selectedPersonId != null
+    val isAddingFirstPerson = showAddFirstPersonSheet
+    if (isAddingRelative || isAddingFirstPerson) {
+        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        ModalBottomSheet(
+            onDismissRequest = {
+                if (isAddingRelative) viewModel.onEvent(TreeCanvasEvent.SelectPerson(null))
+                if (isAddingFirstPerson) showAddFirstPersonSheet = false
+            },
+            sheetState = sheetState,
+        ) {
+            AddRelativeBottomSheet(
+                isLoading = successState?.isAddingRelationLoading == true,
+                isFirstPerson = isAddingFirstPerson, // Передаем флаг
+                onSave = { person, relationType ->
+                    if (isAddingFirstPerson) {
+                        viewModel.onEvent(TreeCanvasEvent.AddFirstPerson(person))
+                        showAddFirstPersonSheet = false
+                    } else {
+                        val request = AddRelationRequest(
+                            person = person,
+                            personIdToFocus = successState!!.selectedPersonId!!,
+                            relationType = relationType!!
+                        )
+                        viewModel.onEvent(TreeCanvasEvent.AddRelative(request))
+                    }
+                }
+            )
+        }
+    }
 }
 
 @Composable
@@ -60,6 +131,8 @@ private fun TreeCanvasLayout(
     state: TreeCanvasState,
     treeId: String,
     onPersonClick: (String) -> Unit,
+    onCardLongClick: (String) -> Unit,
+    onAddFirstPersonClick: () -> Unit,
     onEvent: (TreeCanvasEvent) -> Unit,
 ) {
     when (state) {
@@ -71,12 +144,22 @@ private fun TreeCanvasLayout(
             onTryAgainClick = { onEvent(TreeCanvasEvent.LoadTreeGraph(treeId)) }
         )
 
-        is TreeCanvasState.Success -> TreeCanvasContent(
-            modifier = modifier,
-            tree = state.treeGraph,
-            onPersonClick = onPersonClick,
-            onEvent = onEvent,
-        )
+        is TreeCanvasState.Success -> {
+            if (state.treeGraph.persons.isEmpty()) {
+                EmptyTreeState(
+                    modifier = modifier.fillMaxSize(),
+                    onAddFirstPersonClick = onAddFirstPersonClick
+                )
+            } else {
+                TreeCanvasContent(
+                    modifier = modifier,
+                    tree = state.treeGraph,
+                    onPersonClick = onPersonClick,
+                    onCardLongClick = onCardLongClick,
+                    onEvent = onEvent,
+                )
+            }
+        }
     }
 }
 
@@ -86,6 +169,7 @@ private fun TreeCanvasContent(
     tree: TreeGraph,
     config: LayoutConfig = LayoutConfig(),
     onPersonClick: (String) -> Unit,
+    onCardLongClick: (String) -> Unit,
     onEvent: (TreeCanvasEvent) -> Unit,
 ) {
     // ── Run layout engine ─────────────────────────────────────────────────
@@ -194,7 +278,8 @@ private fun TreeCanvasContent(
                     },
                     onCardClick = { personId ->
                         onPersonClick(personId)
-                    }
+                    },
+                    onCardLongClick = onCardLongClick,
                 )
             }
         }

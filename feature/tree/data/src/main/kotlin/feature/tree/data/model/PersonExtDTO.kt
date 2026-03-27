@@ -1,54 +1,54 @@
 package feature.tree.data.model
 
 import com.erazero1.utils.toInstantOrNull
+import com.google.gson.annotations.SerializedName
 import core.domain.model.Gender
 import feature.tree.domain.model.PersonExt
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.time.Instant
 
 @Serializable
 data class PersonExtDTO(
-    @SerialName("biography")
+    @SerializedName("biography")
     val biography: String?,
-    @SerialName("birth_date")
+    @SerializedName("birth_date")
     val birthDate: String?,
-    @SerialName("birth_date_string")
+    @SerializedName("birth_date_string")
     val birthDateString: String?,
-    @SerialName("birth_place")
+    @SerializedName("birth_place")
     val birthPlace: String?,
-    @SerialName("created_at")
+    @SerializedName("created_at")
     val createdAt: String?,
-    @SerialName("created_by")
+    @SerializedName("created_by")
     val createdBy: String?,
-    @SerialName("death_date")
+    @SerializedName("death_date")
     val deathDate: String?,
-    @SerialName("death_date_string")
+    @SerializedName("death_date_string")
     val deathDateString: String?,
-    @SerialName("death_place")
+    @SerializedName("death_place")
     val deathPlace: String?,
-    @SerialName("first_name")
+    @SerializedName("first_name")
     val firstName: String?,
-    @SerialName("gedcom_id")
+    @SerializedName("gedcom_id")
     val gedcomId: String?,
-    @SerialName("gender")
+    @SerializedName("gender")
     val gender: String?,
-    @SerialName("id")
+    @SerializedName("id")
     val id: String?,
-    @SerialName("is_alive")
+    @SerializedName("is_alive")
     val isAlive: Boolean?,
-    @SerialName("last_name")
+    @SerializedName("last_name")
     val lastName: String?,
-    @SerialName("maiden_name")
+    @SerializedName("maiden_name")
     val maidenName: String?,
-    @SerialName("patronymic")
+    @SerializedName("patronymic")
     val patronymic: String?,
-    @SerialName("photo_url")
+    @SerializedName("photo_url")
     val photoUrl: String?,
-    @SerialName("tree_id")
+    @SerializedName("tree_id")
     val treeId: String?,
-    @SerialName("updated_at")
-    val updatedAt: String?
+    @SerializedName("updated_at")
+    val updatedAt: String?,
 )
 
 fun PersonExtDTO.toDomain(): PersonExt {

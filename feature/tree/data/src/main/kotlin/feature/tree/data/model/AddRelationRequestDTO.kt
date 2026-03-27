@@ -1,23 +1,23 @@
 package feature.tree.data.model
 
+import com.google.gson.annotations.SerializedName
 import feature.tree.domain.model.AddRelationRequest
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class AddRelationRequestDTO(
-    @SerialName("person")
+    @SerializedName("person")
     val person: PersonRequestDTO?,
-    @SerialName("person_id_to_focus")
+    @SerializedName("person_id_to_focus")
     val personIdToFocus: String?,
-    @SerialName("relation_type")
+    @SerializedName("relation_type")
     val relationType: String?,
 )
 
 fun AddRelationRequest.toDTO(): AddRelationRequestDTO {
     return AddRelationRequestDTO(
         person = person.toDTO(),
-        relationType = relationType.value,
+        relationType = relationType?.value,
         personIdToFocus = personIdToFocus
     )
 }

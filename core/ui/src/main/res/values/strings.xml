@@ -68,4 +68,17 @@
     <string name="born">Рождён</string>
     <string name="died">Умер</string>
     <string name="person_created_date_and_id">СОЗДАН %s | ID: %s</string>
+    <string name="add_relative">Добавить отношение</string>
+    <string name="relation_type">Тип отношений</string>
+    <string name="patronymic">Отчество</string>
+    <string name="maiden_name">Девичья фамилия</string>
+    <string name="birth_date">Дата рождения</string>
+    <string name="birth_place">Место рождения</string>
+    <string name="is_alive">Жив</string>
+    <string name="death_date">Дата смерти</string>
+    <string name="death_place">Место смерти</string>
+    <string name="save">Сохранить</string>
+    <string name="tree_is_empty_title">Дерево пустое</string>
+    <string name="tree_is_empty_description">Начните историю своей семьи, добавив первого человека</string>
+    <string name="add_first_person">Добавить первого человека</string>
 </resources>

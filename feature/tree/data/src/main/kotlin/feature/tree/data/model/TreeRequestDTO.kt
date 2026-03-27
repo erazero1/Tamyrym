@@ -1,15 +1,15 @@
 package feature.tree.data.model
 
+import com.google.gson.annotations.SerializedName
 import feature.tree.domain.model.TreeRequest
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class TreeRequestDTO(
-    @SerialName("name")
+    @SerializedName("name")
     val name: String,
-    @SerialName("description")
-    val description: String
+    @SerializedName("description")
+    val description: String,
 )
 fun TreeRequest.toDTO(): TreeRequestDTO {
     return TreeRequestDTO(
