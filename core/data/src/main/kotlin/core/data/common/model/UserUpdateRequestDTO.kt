@@ -13,6 +13,4 @@ data class UserUpdateRequestDTO(
     val gender: String,
     @SerializedName("last_name")
     val lastName: String,
-    @SerializedName("picture_url")
-    val pictureUrl: String,
 )

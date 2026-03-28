@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import core.domain.result.onError
 import core.domain.result.onException
 import core.domain.result.onSuccess
+import feature.auth.domain.model.UserUpdate
+import feature.auth.domain.usecase.EditProfileUseCase
 import feature.auth.domain.usecase.GetProfileUseCase
 import feature.auth.domain.usecase.LogoutUseCase
 import feature.profile.ui.profile.model.ProfileAction
@@ -21,6 +23,7 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val getProfileUseCase: GetProfileUseCase,
+    private val editProfileUseCase: EditProfileUseCase,
     private val onLogoutUseCase: LogoutUseCase,
 ) : ViewModel() {
 
@@ -34,6 +37,51 @@ class ProfileViewModel(
         when (event) {
             ProfileEvent.LoadProfile -> loadProfile()
             ProfileEvent.OnLogoutClick -> onLogout()
+            ProfileEvent.OpenEditDialog -> toggleEditDialog(true)
+            ProfileEvent.CloseEditDialog -> toggleEditDialog(false)
+            is ProfileEvent.SubmitProfileEdit -> editProfile(event)
+        }
+    }
+
+    private fun toggleEditDialog(isOpen: Boolean) {
+        val currentState = _state.value as? ProfileState.Success ?: return
+        _state.update { currentState.copy(isEditDialogOpen = isOpen) }
+    }
+
+    private fun editProfile(event: ProfileEvent.SubmitProfileEdit) {
+        val currentState = _state.value as? ProfileState.Success ?: return
+
+        // Включаем лоадер сохранения
+        _state.update { currentState.copy(isSaving = true) }
+
+        viewModelScope.launch {
+            val updateRequest = UserUpdate(
+                firstName = event.firstName,
+                lastName = event.lastName,
+                birthYear = event.birthYear,
+                gender = event.gender,
+            )
+
+            editProfileUseCase(updateRequest)
+                .onSuccess { updatedUser ->
+                    // Обновляем данные пользователя, закрываем диалог, убираем лоадер
+                    _state.update {
+                        currentState.copy(
+                            user = updatedUser,
+                            isEditDialogOpen = false,
+                            isSaving = false
+                        )
+                    }
+                    _action.send(ProfileAction.ProfileUpdated("Профиль успешно обновлен"))
+                }
+                .onError { _, message, _ ->
+                    _state.update { currentState.copy(isSaving = false) }
+                    _action.send(ProfileAction.ShowToast(message ?: "Ошибка при сохранении"))
+                }
+                .onException { _ ->
+                    _state.update { currentState.copy(isSaving = false) }
+                    _action.send(ProfileAction.ShowToast("Неизвестная ошибка"))
+                }
         }
     }
 

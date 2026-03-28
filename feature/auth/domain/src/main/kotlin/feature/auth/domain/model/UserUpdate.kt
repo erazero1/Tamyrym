@@ -7,5 +7,4 @@ data class UserUpdate(
     val firstName: String,
     val gender: Gender,
     val lastName: String,
-    val pictureUrl: String,
 )

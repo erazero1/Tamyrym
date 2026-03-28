@@ -112,7 +112,6 @@ class AuthRepositoryImpl(
                 firstName = userUpdate.firstName,
                 gender = userUpdate.gender.value,
                 lastName = userUpdate.lastName,
-                pictureUrl = userUpdate.pictureUrl
             )
         ).map { it.userDTO.toDomain() }
     }

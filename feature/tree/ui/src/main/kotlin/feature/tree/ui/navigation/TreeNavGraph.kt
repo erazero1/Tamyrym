@@ -15,8 +15,8 @@ fun NavHostController.navigateToTree(treeId: String) {
     this.navigate(Screen.TreeCanvas(treeId))
 }
 
-fun NavHostController.navigateToPerson(treeId: String) {
-    this.navigate(Screen.TreeCanvas(treeId))
+fun NavHostController.navigateToPerson(personId: String) {
+    this.navigate(Screen.PersonDetail(personId))
 }
 
 fun NavGraphBuilder.treeGraph(modifier: Modifier = Modifier, navController: NavHostController) {

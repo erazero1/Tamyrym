@@ -25,6 +25,7 @@ import core.ui.uikit.effects.SingleEventEffect
 import core.ui.utils.showLongToast
 import feature.auth.domain.model.User
 import feature.profile.ui.profile.components.AppBar
+import feature.profile.ui.profile.components.EditProfileDialog
 import feature.profile.ui.profile.components.Option
 import feature.profile.ui.profile.components.UserCard
 import feature.profile.ui.profile.model.ProfileAction
@@ -52,11 +53,24 @@ internal fun ProfileScreen(
                 showLongToast(context, context.getString(R.string.successful_logout))
                 onLogoutClick()
             }
-
             is ProfileAction.ShowToast -> {
-                showLongToast(context, context.getString(R.string.unknown_error))
+                showLongToast(context, action.message ?: context.getString(R.string.unknown_error))
+            }
+
+            is ProfileAction.ProfileUpdated -> {
+                showLongToast(context, action.message)
             }
         }
+    }
+
+    val currentState = state.value
+    if (currentState is ProfileState.Success && currentState.isEditDialogOpen) {
+        EditProfileDialog(
+            currentUser = currentState.user,
+            isSaving = currentState.isSaving,
+            onConfirm = { event -> viewModel.onEvent(event) },
+            onDismiss = { viewModel.onEvent(ProfileEvent.CloseEditDialog) }
+        )
     }
 
     ProfileLayout(
@@ -123,7 +137,7 @@ private fun ProfileContent(
             text = stringResource(R.string.edit_profile),
             iconId = R.drawable.person_edit_24px,
             onClick = {
-                TODO()
+                onEvent(ProfileEvent.OpenEditDialog)
             })
 //        Option(
 //            modifier = Modifier.fillMaxWidth(),
