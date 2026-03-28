@@ -46,9 +46,6 @@ fun NavGraphBuilder.treeGraph(modifier: Modifier = Modifier, navController: NavH
             PersonDetailScreen(
                 modifier = modifier,
                 personId = route.personId,
-                onEdit = { personId ->
-                    TODO()
-                },
                 onBack = {
                     navController.popBackStack()
                 }

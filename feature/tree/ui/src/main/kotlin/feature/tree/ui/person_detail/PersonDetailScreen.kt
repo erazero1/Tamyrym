@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -41,8 +42,12 @@ import core.ui.theme.AppTheme
 import core.ui.uikit.components.AvatarCircle
 import core.ui.uikit.components.ErrorCard
 import core.ui.uikit.components.LoadingCard
+import core.ui.uikit.effects.SingleEventEffect
+import core.ui.utils.showLongToast
 import feature.tree.domain.model.Person
 import feature.tree.ui.person_detail.components.AppBar
+import feature.tree.ui.person_detail.components.EditPersonBottomSheet
+import feature.tree.ui.person_detail.model.PersonDetailAction
 import feature.tree.ui.person_detail.model.PersonDetailEvent
 import feature.tree.ui.person_detail.model.PersonDetailState
 import org.koin.androidx.compose.koinViewModel
@@ -54,9 +59,9 @@ import java.util.Locale
 internal fun PersonDetailScreen(
     modifier: Modifier = Modifier,
     personId: String,
-    onEdit: (String) -> Unit,
     onBack: () -> Unit,
 ) {
+    val context = LocalContext.current
     val viewModel = koinViewModel<PersonDetailViewModel>()
     val state = viewModel.state.collectAsState()
 
@@ -64,11 +69,31 @@ internal fun PersonDetailScreen(
         viewModel.onEvent(PersonDetailEvent.LoadPerson(personId))
     }
 
+    SingleEventEffect(viewModel.action) { action ->
+        when (action) {
+            is PersonDetailAction.ShowToast -> {
+                showLongToast(context, action.message)
+            }
+        }
+    }
+    val currentState = state.value
+    if (currentState is PersonDetailState.Success && currentState.isEditing) {
+        EditPersonBottomSheet(
+            person = currentState.person,
+            isLoading = currentState.isSaving,
+            onSave = { request ->
+                viewModel.onEvent(PersonDetailEvent.SubmitPersonEdit(personId, request))
+            },
+            onDismiss = {
+                viewModel.onEvent(PersonDetailEvent.CloseEditDialog)
+            }
+        )
+    }
+
     PersonDetailLayout(
         modifier = modifier,
         state = state.value,
         personId = personId,
-        onEdit = onEdit,
         onBack = onBack,
         onEvent = viewModel::onEvent,
     )
@@ -79,7 +104,6 @@ private fun PersonDetailLayout(
     modifier: Modifier = Modifier,
     state: PersonDetailState,
     personId: String,
-    onEdit: (String) -> Unit,
     onBack: () -> Unit,
     onEvent: (PersonDetailEvent) -> Unit,
 ) {
@@ -88,7 +112,7 @@ private fun PersonDetailLayout(
         containerColor = AppTheme.colors.surfaceBright,
         topBar = {
             AppBar(
-                onEdit = { onEdit(personId) },
+                onEdit = { onEvent(PersonDetailEvent.OpenEditDialog) },
                 onBack = onBack,
             )
         },

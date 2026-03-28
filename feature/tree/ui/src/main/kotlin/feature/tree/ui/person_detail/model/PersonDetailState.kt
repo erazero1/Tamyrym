@@ -6,5 +6,9 @@ sealed class PersonDetailState {
     data object Initial : PersonDetailState()
     data object Loading : PersonDetailState()
     data class Error(val message: String? = null) : PersonDetailState()
-    data class Success(val person: Person) : PersonDetailState()
+    data class Success(
+        val person: Person,
+        val isEditing: Boolean = false,
+        val isSaving: Boolean = false,
+    ) : PersonDetailState()
 }
