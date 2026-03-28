@@ -1,4 +1,4 @@
-package feature.tree.domain.model
+package core.domain.model
 
 import java.time.Instant
 
@@ -8,7 +8,7 @@ data class Tree(
     val id: String,
     val name: String,
     val ownerId: String,
-    val updatedAt: Instant
+    val updatedAt: Instant,
 ) {
     companion object {
         fun init() = Tree(

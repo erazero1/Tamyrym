@@ -1,5 +1,6 @@
 package feature.tree.data.repository
 
+import core.domain.model.Tree
 import core.domain.result.ApiResult
 import core.domain.result.map
 import feature.tree.data.model.toDTO
@@ -7,7 +8,6 @@ import feature.tree.data.model.toDomain
 import feature.tree.data.remote.TreeApi
 import feature.tree.domain.model.AddRelationRequest
 import feature.tree.domain.model.Person
-import feature.tree.domain.model.Tree
 import feature.tree.domain.model.TreeGraph
 import feature.tree.domain.model.TreeRequest
 import feature.tree.domain.repository.TreeRepository

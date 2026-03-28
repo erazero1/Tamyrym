@@ -24,9 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import core.domain.model.Tree
 import core.presentation.R
 import core.ui.theme.AppTheme
-import feature.tree.domain.model.Tree
 
 @Composable
 internal fun TreeCard(

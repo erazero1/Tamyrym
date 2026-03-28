@@ -82,4 +82,11 @@
     <string name="ai_analysis">ЖИ талдау</string>
     <string name="ok">Түсінікті</string>
     <string name="ai_analysis_result">ЖИ талдауының нәтижесі</string>
+    <string name="good_morning">Қайырлы таң</string>
+    <string name="good_afternoon">Қайырлы күн</string>
+    <string name="good_evening">Қайырлы кеш</string>
+    <string name="good_night">Қайырлы түн</string>
+    <string name="generations">Ұрпақ</string>
+    <string name="peoples_in_tree">Шежіредегі адамдар</string>
+    <string name="upcoming_events">Алдағы мерекелер</string>
 </resources>

@@ -22,13 +22,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import core.domain.model.Tree
 import core.presentation.R
 import core.ui.theme.AppTheme
 import core.ui.uikit.components.ErrorCard
 import core.ui.uikit.components.LoadingCard
 import core.ui.uikit.effects.SingleEventEffect
 import core.ui.utils.showLongToast
-import feature.tree.domain.model.Tree
 import feature.tree.domain.model.ai.TreeAnalysisResult
 import feature.tree.ui.tree_list.components.AnalysisResultDialog
 import feature.tree.ui.tree_list.components.TreeCard

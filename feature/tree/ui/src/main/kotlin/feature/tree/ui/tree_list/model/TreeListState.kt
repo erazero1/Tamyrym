@@ -1,6 +1,6 @@
 package feature.tree.ui.tree_list.model
 
-import feature.tree.domain.model.Tree
+import core.domain.model.Tree
 
 internal sealed class TreeListState {
     data object Initial : TreeListState()

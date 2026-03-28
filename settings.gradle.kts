@@ -40,3 +40,8 @@ include(":feature:tree:domain")
 include(":feature:tree:ui")
 include(":feature:tree:di")
 include(":core:utils")
+
+include(":feature:home:data")
+include(":feature:home:domain")
+include(":feature:home:ui")
+include(":feature:home:di")

@@ -82,4 +82,11 @@
     <string name="ai_analysis">AI Analysis</string>
     <string name="ok">Okay</string>
     <string name="ai_analysis_result">AI Analysis results</string>
+    <string name="good_morning">Good morning</string>
+    <string name="good_afternoon">Good afternoon</string>
+    <string name="good_evening">Good evening</string>
+    <string name="good_night">Good night</string>
+    <string name="generations">Generations</string>
+    <string name="peoples_in_tree">People in the tree</string>
+    <string name="upcoming_events">Upcoming events</string>
 </resources>

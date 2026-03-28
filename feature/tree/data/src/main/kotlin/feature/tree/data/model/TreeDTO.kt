@@ -2,7 +2,7 @@ package feature.tree.data.model
 
 import com.erazero1.utils.toInstantOrNull
 import com.google.gson.annotations.SerializedName
-import feature.tree.domain.model.Tree
+import core.domain.model.Tree
 import kotlinx.serialization.Serializable
 import java.time.Instant
 

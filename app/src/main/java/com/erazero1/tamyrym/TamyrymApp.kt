@@ -5,6 +5,7 @@ import com.erazero1.splash.presentation.splashModule
 import core.data.local.localDataModule
 import core.data.remote.remoteDataModule
 import feature.auth.di.authFeatureModule
+import feature.home.di.homeModule
 import feature.profile.di.profileModule
 import feature.tree.di.treeModule
 import org.koin.android.ext.koin.androidContext
@@ -19,7 +20,7 @@ class TamyrymApp : Application() {
             androidContext(this@TamyrymApp)
             modules(
                 remoteDataModule, localDataModule, authFeatureModule, splashModule,
-                profileModule, treeModule,
+                profileModule, treeModule, homeModule,
             )
         }
     }

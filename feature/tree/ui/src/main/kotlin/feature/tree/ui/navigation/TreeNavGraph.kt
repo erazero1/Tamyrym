@@ -11,6 +11,14 @@ import feature.tree.ui.person_detail.PersonDetailScreen
 import feature.tree.ui.tree_canvas.TreeCanvasScreen
 import feature.tree.ui.tree_list.TreeListScreen
 
+fun NavHostController.navigateToTree(treeId: String) {
+    this.navigate(Screen.TreeCanvas(treeId))
+}
+
+fun NavHostController.navigateToPerson(treeId: String) {
+    this.navigate(Screen.TreeCanvas(treeId))
+}
+
 fun NavGraphBuilder.treeGraph(modifier: Modifier = Modifier, navController: NavHostController) {
     navigation<Route.Tree>(startDestination = Screen.TreeList) {
         composable<Screen.TreeList> {
