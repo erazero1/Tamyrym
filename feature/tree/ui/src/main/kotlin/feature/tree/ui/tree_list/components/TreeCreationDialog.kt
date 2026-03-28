@@ -1,7 +1,10 @@
 package feature.tree.ui.tree_list.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -12,6 +15,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import core.presentation.R
 import core.ui.theme.AppTheme
 
@@ -30,27 +35,39 @@ internal fun TreeCreationDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         modifier = modifier,
-        title = { Text(text = title) },
+        title = {
+            Text(
+                text = title,
+                style = AppTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+        },
         containerColor = AppTheme.colors.surfaceDim,
-        titleContentColor = AppTheme.colors.onSurface,
-        textContentColor = AppTheme.colors.onSurface,
-        shape = AppTheme.shapes.small,
+        shape = AppTheme.shapes.large, // Диалогам обычно идут более круглые углы
         text = {
-            Column {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp) // Задает ровный отступ между полями
+            ) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text(stringResource(R.string.tree_name)) }
+                    label = { Text(stringResource(R.string.tree_name)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true // Имя обычно в одну строку
                 )
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text(stringResource(R.string.tree_description)) }
+                    label = { Text(stringResource(R.string.tree_description)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    minLines = 3, // Даем чуть больше места для описания
+                    maxLines = 5
                 )
             }
         },
         confirmButton = {
-            TextButton(
+            Button( // Выделяем главную кнопку цветом (Button вместо TextButton)
                 onClick = {
                     onConfirm(name, description)
                     onDismiss()

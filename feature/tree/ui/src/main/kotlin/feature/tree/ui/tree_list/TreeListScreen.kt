@@ -111,6 +111,12 @@ internal fun TreeListScreen(
             onDismiss = { analysisResultState = null }
         )
     }
+    val successState = state.value as? TreeListState.Success
+    successState?.let {
+        if (it.isAnalyzing) {
+            LoadingCard(modifier = Modifier.fillMaxSize())
+        }
+    }
 
     TreeListLayout(
         modifier = modifier,
