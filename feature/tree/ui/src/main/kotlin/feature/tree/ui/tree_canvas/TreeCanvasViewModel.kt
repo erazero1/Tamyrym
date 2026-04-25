@@ -9,9 +9,12 @@ import feature.tree.domain.model.AddRelationRequest
 import feature.tree.domain.model.PersonRequest
 import feature.tree.domain.usecase.AddRelationToPersonUseCase
 import feature.tree.domain.usecase.GetOptimizedTreeGraphUseCase
+import feature.tree.ui.tree_canvas.model.LayoutConfig
 import feature.tree.ui.tree_canvas.model.TreeCanvasAction
 import feature.tree.ui.tree_canvas.model.TreeCanvasEvent
 import feature.tree.ui.tree_canvas.model.TreeCanvasState
+import feature.tree.ui.tree_canvas.model.TreeLayoutEngine
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,6 +29,7 @@ class TreeCanvasViewModel(
     private val addRelationToPersonUseCase: AddRelationToPersonUseCase,
 ) : ViewModel() {
     private var currentTreeId: String = ""
+    private var lastUsedConfig: LayoutConfig? = null
 
     private val _state: MutableStateFlow<TreeCanvasState> =
         MutableStateFlow(TreeCanvasState.Initial)
@@ -44,6 +48,10 @@ class TreeCanvasViewModel(
             is TreeCanvasEvent.SelectPerson -> updateSelectedPerson(event.personId)
             is TreeCanvasEvent.AddRelative -> addRelative(event.request)
             is TreeCanvasEvent.AddFirstPerson -> addFirstPerson(event.request)
+            is TreeCanvasEvent.UpdateLayoutConfig -> {
+                lastUsedConfig = event.config
+                calculateLayoutIfNeeded()
+            }
         }
     }
 
@@ -68,8 +76,23 @@ class TreeCanvasViewModel(
                 depth = 5,
             ).onSuccess { treeGraph ->
                 _state.update {
-                    TreeCanvasState.Success(treeGraph)
+                    TreeCanvasState.Success(treeGraph = treeGraph)
                 }
+                calculateLayoutIfNeeded()
+            }
+        }
+    }
+
+    private fun calculateLayoutIfNeeded() {
+        val currentState = _state.value as? TreeCanvasState.Success ?: return
+        val config = lastUsedConfig ?: return
+
+        viewModelScope.launch(Dispatchers.Default) {
+            val layoutResult = TreeLayoutEngine(config).calculate(currentState.treeGraph)
+            _state.update {
+                if (it is TreeCanvasState.Success) {
+                    it.copy(layoutResult = layoutResult)
+                } else it
             }
         }
     }

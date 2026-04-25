@@ -17,13 +17,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import core.presentation.R
 
 internal interface ZoomableCanvasScope {
     val scale: Float
     val offset: Offset
+    val canvasSize: IntSize
 }
 
 @Composable
@@ -33,14 +36,18 @@ internal fun ZoomableCanvas(
 ) {
     var scale by remember { mutableFloatStateOf(1f) }
     var offset by remember { mutableStateOf(Offset.Zero) }
-    val zoomableScope = remember(scale, offset) {
+    var canvasSize by remember { mutableStateOf(IntSize.Zero) }
+
+    val zoomableScope = remember(scale, offset, canvasSize) {
         object : ZoomableCanvasScope {
             override val scale: Float = scale
             override val offset: Offset = offset
+            override val canvasSize: IntSize = canvasSize
         }
     }
     Box(
         modifier = modifier
+            .onSizeChanged { canvasSize = it }
             .pointerInput(Unit) {
                 detectTransformGestures { centroid, pan, zoom, _ ->
                     val oldScale = scale

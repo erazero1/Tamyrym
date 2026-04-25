@@ -8,6 +8,7 @@ internal sealed class TreeCanvasState {
     data class Error(val message: String? = null) : TreeCanvasState()
     data class Success(
         val treeGraph: TreeGraph,
+        val layoutResult: LayoutResult? = null,
         val selectedPersonId: String? = null,
         val isAddingRelationLoading: Boolean = false,
     ) : TreeCanvasState()

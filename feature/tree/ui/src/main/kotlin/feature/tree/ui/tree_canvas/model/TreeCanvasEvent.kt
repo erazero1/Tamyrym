@@ -10,4 +10,5 @@ internal sealed interface TreeCanvasEvent {
     data class SelectPerson(val personId: String?) : TreeCanvasEvent
     data class AddRelative(val request: AddRelationRequest) : TreeCanvasEvent
     data class AddFirstPerson(val request: PersonRequest) : TreeCanvasEvent
+    data class UpdateLayoutConfig(val config: LayoutConfig) : TreeCanvasEvent
 }

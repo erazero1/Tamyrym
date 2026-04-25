@@ -31,6 +31,7 @@ import feature.tree.ui.tree_canvas.model.LayoutConfig
 internal fun PersonCard(
     person: PersonInfo,
     config: LayoutConfig,
+    scale: Float,
     modifier: Modifier = Modifier,
     onCardClick: (String) -> Unit,
     onCardLongClick: (String) -> Unit,
@@ -67,34 +68,37 @@ internal fun PersonCard(
                 .background(accentColor)
         )
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 10.dp, end = 6.dp, top = 8.dp, bottom = 6.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.Start
-        ) {
-            Text(
-                text = person.firstName,
-                color = AppTheme.colors.onSurface,
-                style = AppTheme.typography.bodyMedium,
-                fontWeight = FontWeight.SemiBold,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                text = person.lastName,
-                color = AppTheme.colors.onSurface,
-                style = AppTheme.typography.bodySmall,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Spacer(Modifier.height(4.dp))
-            Text(
-                text = "Gen ${person.generation}",
-                color = AppTheme.colors.onSurfaceVariant,
-                style = AppTheme.typography.labelSmall,
-            )
+        // LOD: Hide text content if scale is too small
+        if (scale >= 0.4f) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 10.dp, end = 6.dp, top = 8.dp, bottom = 6.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    text = person.firstName,
+                    color = AppTheme.colors.onSurface,
+                    style = AppTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = person.lastName,
+                    color = AppTheme.colors.onSurface,
+                    style = AppTheme.typography.bodySmall,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    text = "Gen ${person.generation}",
+                    color = AppTheme.colors.onSurfaceVariant,
+                    style = AppTheme.typography.labelSmall,
+                )
+            }
         }
     }
 }
