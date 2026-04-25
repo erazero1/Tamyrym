@@ -1,572 +1,315 @@
 package feature.tree.ui.tree_canvas.model
 
 import androidx.compose.ui.geometry.Offset
-import feature.tree.domain.model.PersonInfo
 import feature.tree.domain.model.TreeGraph
 import feature.tree.domain.model.Union
+import java.util.ArrayDeque
+import kotlin.math.max
 
 internal data class LayoutConfig(
     val nodeWidth: Float = 160f,
     val nodeHeight: Float = 80f,
     val horizontalSpacing: Float = 64f,
-    val verticalSpacing: Float = 40f,
-    val spouseSpacing: Float = 80f,
-    val unionSpacing: Float = 120f, // Расстояние между разными союзами одного человека
+    val verticalSpacing: Float = 80f,
+    val spouseSpacing: Float = 40f,
+    val unionSpacing: Float = 100f,
 )
 
-/**
- * Результат layout-вычислений.
- *
- * @property positions Карта ID → координата top-left для person/union, или промежуточная точка для dummy nodes
- * @property dummyNodes Карта ID фиктивного узла → его координата (для отрисовки линий через промежуточные слои)
- * @property cyclicLinks Множество ID узлов, участвующих в циклах
- * @property ranks Карта ID узла → номер поколения (слоя)
- */
 internal data class LayoutResult(
     val positions: Map<String, Offset>,
-    val dummyNodes: Map<String, List<Offset>> = emptyMap(), // ID ребра → список промежуточных точек
+    val dummyNodes: Map<String, List<Offset>> = emptyMap(),
     val cyclicLinks: Set<String> = emptySet(),
     val ranks: Map<String, Int> = emptyMap(),
 )
 
-/**
- * Полноценная реализация Sugiyama framework для генеалогических древ.
- *
- * Фазы алгоритма:
- * 1. Ранжирование (Ranking) — назначение поколений всем узлам
- * 2. Добавление фиктивных узлов (Dummy Nodes) — для рёбер через несколько слоёв
- * 3. Вычисление ширин поддеревьев (Bottom-up)
- * 4. Назначение координат (Top-down) с обработкой множественных союзов и консангвинитета
- *
- * Особенности для генеалогии:
- * - Поддержка множественных браков (союзы располагаются горизонтально)
- * - Обработка инбридинга (consanguinity) — общие предки не дублируются
- * - Группировка детей под соответствующим союзом
- */
-internal class TreeLayoutEngine(private val config: LayoutConfig = LayoutConfig()) {
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // Внутреннее состояние (сбрасывается на каждый вызов calculate())
-    // ─────────────────────────────────────────────────────────────────────────
-
-    private lateinit var personMap: HashMap<String, PersonInfo>
-    private lateinit var unionMap: HashMap<String, Union>
-
-    // Для каждого person: список всех союзов, где он участвует (как person1 или person2)
-    private lateinit var personUnions: HashMap<String, List<Union>>
-
-    // Ширина поддерева для каждого узла (person или union)
-    private lateinit var subtreeWidths: HashMap<String, Float>
-
-    // Множество циклических связей
+internal class TreeLayoutEngine(
+    private val config: LayoutConfig = LayoutConfig()
+) {
+    private lateinit var personUnions: Map<String, List<Union>>
+    private val personWidths = mutableMapOf<String, Float>()
+    private val unionWidths = mutableMapOf<String, Float>()
+    private val ranks = mutableMapOf<String, Int>()
     private val cyclicLinks = mutableSetOf<String>()
-
-    // Ранг (поколение) каждого узла
-    private lateinit var ranks: HashMap<String, Int>
-
-    // Множество уже размещённых узлов (для обработки консангвинитета)
-    private val placedNodes = mutableSetOf<String>()
-
-    // Временные координаты для вычисления средней позиции при консангвинитете
-    private val pendingPositions = mutableMapOf<String, MutableList<Offset>>()
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // Публичный API
-    // ─────────────────────────────────────────────────────────────────────────
+    private val placedPersons = mutableSetOf<String>()
+    private val placedUnions = mutableSetOf<String>()
+    private val dummyNodesResult = mutableMapOf<String, List<Offset>>()
 
     fun calculate(tree: TreeGraph): LayoutResult {
-        reset(tree)
+        if (tree.persons.isEmpty()) {
+            return LayoutResult(emptyMap())
+        }
 
-        // Фаза 1: Ранжирование — определяем поколение для каждого узла
+        initMaps(tree)
         computeRanks(tree)
 
-        // Фаза 2: Добавляем фиктивные узлы для рёбер через несколько слоёв
-        val dummyNodes = computeDummyNodes(tree)
+        personWidths.clear()
+        unionWidths.clear()
+        cyclicLinks.clear()
+        placedPersons.clear()
+        placedUnions.clear()
+        dummyNodesResult.clear()
 
-        // Фаза 3: Вычисляем ширины поддеревьев (bottom-up)
-        tree.rootPersonIds.forEach { rootId ->
-            calculateSubtreeWidth(rootId, callStack = mutableSetOf())
-        }
+        val roots = resolveRoots(tree)
+        roots.forEach { calculatePersonWidth(it, mutableSetOf()) }
 
-        // Фаза 4: Назначаем координаты (top-down)
         val positions = mutableMapOf<String, Offset>()
-        var globalX = 0f
+        var currentX = 0f
 
-        tree.rootPersonIds.forEach { rootId ->
-            val treeWidth = subtreeWidths[rootId] ?: config.nodeWidth
-            assignCoordinates(
-                personId = rootId,
-                xStart = globalX,
-                parentCenterX = null,
-                result = positions,
-                callStack = mutableSetOf()
-            )
-            globalX += treeWidth + config.horizontalSpacing
+        roots.forEach { rootId ->
+            if (rootId !in placedPersons) {
+                val width = personWidths[rootId] ?: config.nodeWidth
+                placePerson(
+                    personId = rootId,
+                    xStart = currentX,
+                    result = positions,
+                    stack = mutableSetOf()
+                )
+                currentX += width + config.horizontalSpacing
+            }
         }
-
-        // Обработка консангвинитета: усредняем позиции для узлов с несколькими родителями
-        val finalPositions = resolveConsanguinity(positions)
 
         return LayoutResult(
-            positions = finalPositions,
-            dummyNodes = dummyNodes,
-            cyclicLinks = cyclicLinks.toSet(),
+            positions = positions,
+            dummyNodes = dummyNodesResult,
+            cyclicLinks = cyclicLinks,
             ranks = ranks.toMap()
         )
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Фаза 1: Ранжирование (Ranking / Layer Assignment)
-    // ─────────────────────────────────────────────────────────────────────────
+    private fun resolveRoots(tree: TreeGraph): List<String> {
+        val childrenIds = tree.unions.flatMap { it.childrenIds }.toSet()
 
-    /**
-     * Вычисляет ранг (поколение) для каждого узла в графе.
-     *
-     * Алгоритм: обход в ширину от корней, затем корректировка "вверх"
-     * для узлов с родителями в разных поколениях.
-     *
-     * Для генеалогии: rank(person) = max(rank(всех союзов где он ребёнок)) + 1
-     *                rank(union) = max(rank(родителей))
-     *                (или rank(parent1) если известен)
-     */
+        val explicitRoots = tree.rootPersonIds.filter { id ->
+            tree.persons.any { it.id == id }
+        }
+
+        if (explicitRoots.isNotEmpty()) return explicitRoots
+
+        val structuralRoots = tree.persons
+            .filter { it.id !in childrenIds }
+            .map { it.id }
+
+        return if (structuralRoots.isNotEmpty()) structuralRoots else listOf(tree.persons.first().id)
+    }
+
+    private fun initMaps(tree: TreeGraph) {
+        val unionsByPerson = mutableMapOf<String, MutableList<Union>>()
+
+        tree.unions.forEach { union ->
+            unionsByPerson.getOrPut(union.person1Id) { mutableListOf() }.add(union)
+            if (union.person2Id.isNotBlank()) {
+                unionsByPerson.getOrPut(union.person2Id) { mutableListOf() }.add(union)
+            }
+        }
+
+        personUnions = unionsByPerson
+    }
+
     private fun computeRanks(tree: TreeGraph) {
-        // Инициализируем ранги
-        ranks = HashMap(tree.persons.size + tree.unions.size)
+        ranks.clear()
 
-        // Сначала назначаем ранги корням
-        tree.rootPersonIds.forEach { ranks[it] = 0 }
-
-        // Обходим в ширину от корней вниз к потомкам
         val queue = ArrayDeque<String>()
-        queue.addAll(tree.rootPersonIds)
-        val visited = mutableSetOf<String>()
+        val roots = resolveRoots(tree)
+
+        roots.forEach { rootId ->
+            ranks[rootId] = 0
+            queue.add(rootId)
+        }
 
         while (queue.isNotEmpty()) {
             val personId = queue.removeFirst()
-            if (personId in visited) continue
-            visited.add(personId)
+            val currentRank = ranks[personId] ?: 0
 
-            val personRank = ranks[personId] ?: 0
-            val unions = personUnions[personId] ?: emptyList()
+            personUnions[personId].orEmpty().forEach { union ->
+                ranks.putIfAbsent(union.id, currentRank)
 
-            unions.forEach { union ->
-                // Ранг союза = ранг родителя (или max рангов обоих родителей)
-                val otherParentId =
-                    if (union.person1Id == personId) union.person2Id else union.person1Id
-                val otherParentRank = if (otherParentId.isNotEmpty()) ranks[otherParentId] else null
-
-                val unionRank = if (otherParentRank != null) {
-                    maxOf(personRank, otherParentRank)
-                } else {
-                    personRank
-                }
-
-                // Обновляем ранг союза если он уже был назначен (берём максимум)
-                val currentUnionRank = ranks[union.id]
-                ranks[union.id] = if (currentUnionRank != null) {
-                    maxOf(currentUnionRank, unionRank)
-                } else {
-                    unionRank
-                }
-
-                // Дети союза идут на следующий уровень
-                val childRank = (ranks[union.id] ?: unionRank) + 1
+                val childRank = currentRank + 1
                 union.childrenIds.forEach { childId ->
-                    val currentChildRank = ranks[childId]
-                    ranks[childId] = if (currentChildRank != null) {
-                        // Уже есть ранг от другого родителя — берём максимум
-                        maxOf(currentChildRank, childRank)
-                    } else {
-                        childRank
-                    }
-                    queue.addLast(childId)
-                }
-            }
-        }
-
-        // Корректировка: убеждаемся, что дети всегда ниже родителей
-        var changed = true
-        var iterations = 0
-        val maxIterations = tree.persons.size + tree.unions.size
-
-        while (changed && iterations < maxIterations) {
-            changed = false
-            iterations++
-
-            tree.unions.forEach { union ->
-                val unionRank = ranks[union.id] ?: 0
-                val parent1Rank = ranks[union.person1Id] ?: 0
-                val parent2Rank =
-                    if (union.person2Id.isNotEmpty()) ranks[union.person2Id] ?: 0 else parent1Rank
-
-                // Союз должен быть на уровне max(родителей)
-                val requiredUnionRank = maxOf(parent1Rank, parent2Rank)
-                if (unionRank != requiredUnionRank) {
-                    ranks[union.id] = requiredUnionRank
-                    changed = true
-                }
-
-                // Дети должны быть ниже союза
-                val requiredChildRank = requiredUnionRank + 1
-                union.childrenIds.forEach { childId ->
-                    val childRank = ranks[childId] ?: requiredChildRank
-                    if (childRank < requiredChildRank) {
-                        ranks[childId] = requiredChildRank
-                        changed = true
+                    val existing = ranks[childId]
+                    if (existing == null || childRank > existing) {
+                        ranks[childId] = childRank
+                        queue.add(childId)
                     }
                 }
             }
         }
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Фаза 2: Фиктивные узлы (Dummy Nodes)
-    // ─────────────────────────────────────────────────────────────────────────
+    private fun calculatePersonWidth(personId: String, stack: MutableSet<String>): Float {
+        personWidths[personId]?.let { return it }
 
-    /**
-     * Вычисляет промежуточные точки для рёбер, пересекающих несколько слоёв.
-     *
-     * Возвращает карту: ID союза → список Offset для отрисовки ломаной линии
-     * через промежуточные поколения.
-     */
-    private fun computeDummyNodes(tree: TreeGraph): Map<String, List<Offset>> {
-        val dummyNodes = mutableMapOf<String, MutableList<Offset>>()
-
-        tree.unions.forEach { union ->
-            val unionRank = ranks[union.id] ?: return@forEach
-
-            union.childrenIds.forEach { childId ->
-                val childRank = ranks[childId] ?: return@forEach
-                val span = childRank - unionRank
-
-                if (span > 1) {
-                    // Требуются фиктивные узлы на уровнях unionRank+1 ... childRank-1
-                    val dummies = mutableListOf<Offset>()
-
-                    // X будет вычислен позже, пока сохраняем только Y-координаты
-                    // Фактические X будут определены при назначении координат
-                    for (level in unionRank + 1 until childRank) {
-                        val y =
-                            level * (config.nodeHeight + config.verticalSpacing) + config.nodeHeight / 2
-                        // X будет заполнен позже через специальную логику
-                        dummies.add(Offset(0f, y))
-                    }
-
-                    dummyNodes.getOrPut("${union.id}->$childId") { mutableListOf() }.addAll(dummies)
-                }
-            }
-        }
-
-        return dummyNodes
-    }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // Фаза 3: Вычисление ширин поддеревьев (Bottom-up)
-    // ─────────────────────────────────────────────────────────────────────────
-
-    /**
-     * Рекурсивно вычисляет ширину поддерева для personId.
-     *
-     * Для множественных союзов: ширина = сумма ширин всех союзов + расстояния между ними
-     * Для каждого союза: ширина = max(ширина блока супругов, сумма ширин детей)
-     */
-    private fun calculateSubtreeWidth(
-        personId: String,
-        callStack: MutableSet<String>,
-    ): Float {
-        // Обнаружение цикла
-        if (personId in callStack) {
+        if (!stack.add(personId)) {
             cyclicLinks.add(personId)
             return config.nodeWidth
         }
 
-        // Уже вычислено
-        subtreeWidths[personId]?.let { return it }
+        val unions = personUnions[personId].orEmpty()
+        val width = when {
+            unions.isEmpty() -> config.nodeWidth
 
-        callStack.add(personId)
-
-        val unions = personUnions[personId]?.sortedBy { it.generation } ?: emptyList()
-
-        val width = if (unions.isEmpty()) {
-            // Листовой узел без союзов
-            config.nodeWidth
-        } else {
-            // Суммируем ширину всех союзов этого человека
-            var totalWidth = 0f
-            unions.forEachIndexed { index, union ->
-                val unionWidth = calculateUnionSubtreeWidth(union, callStack)
-                totalWidth += unionWidth
-                if (index < unions.size - 1) {
-                    totalWidth += config.unionSpacing
-                }
+            unions.size == 1 -> {
+                calculateUnionWidth(unions.first(), stack)
             }
-            totalWidth
+
+            else -> {
+                var total = 0f
+                unions.forEachIndexed { index, union ->
+                    total += calculateUnionWidth(union, stack)
+                    if (index < unions.lastIndex) {
+                        total += config.unionSpacing
+                    }
+                }
+                max(config.nodeWidth, total)
+            }
         }
 
-        callStack.remove(personId)
-        subtreeWidths[personId] = width
+        stack.remove(personId)
+        personWidths[personId] = width
         return width
     }
 
-    /**
-     * Вычисляет ширину поддерева для конкретного союза.
-     */
-    private fun calculateUnionSubtreeWidth(
-        union: Union,
-        callStack: MutableSet<String>,
-    ): Float {
-        // Ширина блока супругов
-        val spouseBlockWidth = calculateSpouseBlockWidth(union)
+    private fun calculateUnionWidth(union: Union, stack: MutableSet<String>): Float {
+        unionWidths[union.id]?.let { return it }
 
-        // Ширина детей
-        val children = union.childrenIds
-        val childrenWidth = if (children.isEmpty()) {
-            0f
-        } else {
-            var width = 0f
-            children.forEachIndexed { index, childId ->
-                width += calculateSubtreeWidth(childId, callStack)
-                if (index < children.size - 1) {
-                    width += config.horizontalSpacing
-                }
-            }
-            width
-        }
-
-        return maxOf(spouseBlockWidth, childrenWidth)
-    }
-
-    /**
-     * Ширина визуального блока супругов для союза.
-     */
-    private fun calculateSpouseBlockWidth(union: Union): Float {
-        val hasSpouse = union.person2Id.isNotEmpty()
-        return if (hasSpouse) {
-            config.nodeWidth * 2 + config.spouseSpacing
+        val spouseBlockWidth = if (union.person2Id.isNotBlank()) {
+            config.nodeWidth * 2f + config.spouseSpacing
         } else {
             config.nodeWidth
         }
+
+        var childrenWidth = 0f
+        union.childrenIds.forEachIndexed { index, childId ->
+            childrenWidth += calculatePersonWidth(childId, stack)
+            if (index < union.childrenIds.lastIndex) {
+                childrenWidth += config.horizontalSpacing
+            }
+        }
+
+        val width = max(spouseBlockWidth, childrenWidth)
+        unionWidths[union.id] = width
+        return width
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Фаза 4: Назначение координат (Top-down)
-    // ─────────────────────────────────────────────────────────────────────────
-
-    /**
-     * Рекурсивно назначает координаты для personId и всех его потомков.
-     *
-     * @param personId ID текущего человека
-     * @param xStart Начальная X-координата доступного пространства
-     * @param parentCenterX X-координата центра родительского блока (для консангвинитета)
-     * @param result Мапа для накопления результатов
-     * @param callStack Стек вызовов для обнаружения циклов
-     */
-    private fun assignCoordinates(
+    private fun placePerson(
         personId: String,
         xStart: Float,
-        parentCenterX: Float?,
         result: MutableMap<String, Offset>,
-        callStack: MutableSet<String>,
+        stack: MutableSet<String>
     ) {
-        // Защита от циклов и повторной обработки
-        if (personId in callStack) return
-
-        // Обработка консангвинитета: узел уже размещён через другую ветвь
-        if (personId in placedNodes) {
-            // Сохраняем альтернативную позицию для усреднения
-            val existingPos = result[personId]
-            if (existingPos != null && parentCenterX != null) {
-                pendingPositions.getOrPut(personId) { mutableListOf() }.add(existingPos)
-
-                // Вычисляем "желаемую" позицию от текущего родителя
-                val desiredX = parentCenterX - config.nodeWidth / 2f
-                val rank = ranks[personId] ?: 0
-                val y = rank * (config.nodeHeight + config.verticalSpacing)
-                pendingPositions[personId]?.add(Offset(desiredX, y))
-            }
+        if (personId in placedPersons) return
+        if (!stack.add(personId)) {
+            cyclicLinks.add(personId)
             return
         }
 
-        callStack.add(personId)
-        placedNodes.add(personId)
+        placedPersons.add(personId)
 
-        val subtreeWidth = subtreeWidths[personId] ?: config.nodeWidth
-        val centerX = xStart + subtreeWidth / 2f
-        val rank = ranks[personId] ?: 0
-        val y = rank * (config.nodeHeight + config.verticalSpacing)
+        val y = (ranks[personId] ?: 0) * (config.nodeHeight + config.verticalSpacing)
+        val personWidth = personWidths[personId] ?: config.nodeWidth
+        val unions = personUnions[personId].orEmpty()
 
-        // Получаем все союзы этого человека, сортируем по поколению союза
-        val unions = personUnions[personId]?.sortedBy { it.generation } ?: emptyList()
+        val primaryUnion = unions.firstOrNull { it.id !in placedUnions }
+        val spouseBlockWidth = when {
+            primaryUnion == null -> config.nodeWidth
+            primaryUnion.person2Id.isNotBlank() -> config.nodeWidth * 2f + config.spouseSpacing
+            else -> config.nodeWidth
+        }
 
-        if (unions.isEmpty()) {
-            // Одиночный узел без союзов
-            result[personId] = Offset(centerX - config.nodeWidth / 2f, y)
+        val cardX = if (primaryUnion == null) {
+            xStart + (personWidth - config.nodeWidth) / 2f
         } else {
-            // Размещаем все союзы горизонтально
-            var currentX = xStart
-            unions.forEachIndexed { index, union ->
-                val unionWidth = subtreeWidths[union.id] ?: calculateSpouseBlockWidth(union)
-
-                // Размещаем блок супругов для этого союза
-                placeUnionBlock(union, currentX, y, rank, result)
-
-                // Размещаем детей этого союза под ним
-                placeChildren(union, currentX, y, rank, result, callStack)
-
-                currentX += unionWidth
-                if (index < unions.size - 1) {
-                    currentX += config.unionSpacing
-                }
-            }
+            xStart + (personWidth - spouseBlockWidth) / 2f
         }
 
-        callStack.remove(personId)
-    }
+        result[personId] = Offset(cardX, y)
 
-    /**
-     * Размещает блок супругов для союза.
-     */
-    private fun placeUnionBlock(
-        union: Union,
-        xStart: Float,
-        y: Float,
-        rank: Int,
-        result: MutableMap<String, Offset>,
-    ) {
-        val hasSpouse = union.person2Id.isNotEmpty()
-        val blockWidth = calculateSpouseBlockWidth(union)
-        val centerX = xStart + blockWidth / 2f
-
-        // Сохраняем позицию союза (якорь для линий)
-        result[union.id] = Offset(centerX, y + config.nodeHeight)
-
-        if (hasSpouse) {
-            // Два супруга рядом
-            val blockStartX = centerX - blockWidth / 2f
-            result[union.person1Id] = Offset(blockStartX, y)
-            result[union.person2Id] =
-                Offset(blockStartX + config.nodeWidth + config.spouseSpacing, y)
-        } else {
-            // Один родитель
-            result[union.person1Id] = Offset(centerX - config.nodeWidth / 2f, y)
-        }
-    }
-
-    /**
-     * Рекурсивно размещает детей союза.
-     */
-    private fun placeChildren(
-        union: Union,
-        unionXStart: Float,
-        parentY: Float,
-        parentRank: Int,
-        result: MutableMap<String, Offset>,
-        callStack: MutableSet<String>,
-    ) {
-        val children = union.childrenIds
-        if (children.isEmpty()) return
-
-        val unionWidth = subtreeWidths[union.id] ?: calculateSpouseBlockWidth(union)
-        val unionCenterX = unionXStart + unionWidth / 2f
-
-        // Вычисляем общую ширину детей
-        var childrenTotalWidth = 0f
-        children.forEachIndexed { index, childId ->
-            childrenTotalWidth += subtreeWidths[childId] ?: config.nodeWidth
-            if (index < children.size - 1) {
-                childrenTotalWidth += config.horizontalSpacing
-            }
-        }
-
-        // Центрируем детей под союзом
-        var childX = unionCenterX - childrenTotalWidth / 2f
-
-        children.forEach { childId ->
-            val childWidth = subtreeWidths[childId] ?: config.nodeWidth
-
-            assignCoordinates(
-                personId = childId,
-                xStart = childX,
-                parentCenterX = unionCenterX,
+        unions.forEach { union ->
+            if (union.id in placedUnions) return@forEach
+            placedUnions.add(union.id)
+            placeUnion(
+                union = union,
+                currentPersonId = personId,
                 result = result,
-                callStack = callStack
+                stack = stack
             )
+        }
 
+        stack.remove(personId)
+    }
+
+    private fun placeUnion(
+        union: Union,
+        currentPersonId: String,
+        result: MutableMap<String, Offset>,
+        stack: MutableSet<String>
+    ) {
+        val currentPos = result[currentPersonId] ?: return
+
+        val spouseId = when (currentPersonId) {
+            union.person1Id -> union.person2Id
+            union.person2Id -> union.person1Id
+            else -> union.person2Id.ifBlank { union.person1Id }
+        }
+
+        if (spouseId.isNotBlank() && spouseId !in placedPersons) {
+            val spouseX = currentPos.x + config.nodeWidth + config.spouseSpacing
+            placePerson(spouseId, spouseX, result, stack)
+        }
+
+        val spousePos = result[spouseId]
+        val unionX = when {
+            spousePos != null -> {
+                ((currentPos.x + config.nodeWidth / 2f) + (spousePos.x + config.nodeWidth / 2f)) / 2f
+            }
+
+            union.person2Id.isNotBlank() -> currentPos.x + config.nodeWidth + config.spouseSpacing / 2f
+            else -> currentPos.x + config.nodeWidth / 2f
+        }
+
+        val unionY = currentPos.y + config.nodeHeight / 2f
+        result[union.id] = Offset(unionX, unionY)
+
+        if (union.childrenIds.isEmpty()) return
+
+        var childrenWidth = 0f
+        union.childrenIds.forEachIndexed { index, childId ->
+            childrenWidth += personWidths[childId] ?: config.nodeWidth
+            if (index < union.childrenIds.lastIndex) {
+                childrenWidth += config.horizontalSpacing
+            }
+        }
+
+        var childX = unionX - childrenWidth / 2f
+        union.childrenIds.forEach { childId ->
+            val childWidth = personWidths[childId] ?: config.nodeWidth
+            placePerson(childId, childX, result, stack)
+            generateDummyNodes(union.id, childId, unionX, result)
             childX += childWidth + config.horizontalSpacing
         }
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Обработка консангвинитета (Consanguinity)
-    // ─────────────────────────────────────────────────────────────────────────
+    private fun generateDummyNodes(
+        unionId: String,
+        childId: String,
+        unionX: Float,
+        result: Map<String, Offset>
+    ) {
+        val childPos = result[childId] ?: return
+        val startRank = ranks[unionId] ?: return
+        val endRank = ranks[childId] ?: return
 
-    /**
-     * Разрешает позиции для узлов с инбридингом (несколько родителей).
-     *
-     * Для узлов, которые имеют несколько "ожидаемых" позиций от разных родителей,
-     * вычисляем среднюю позицию и обновляем всех потомков соответственно.
-     */
-    private fun resolveConsanguinity(positions: MutableMap<String, Offset>): Map<String, Offset> {
-        if (pendingPositions.isEmpty()) return positions
+        if (endRank - startRank <= 1) return
 
-        val finalPositions = positions.toMutableMap()
+        val childCenterX = childPos.x + config.nodeWidth / 2f
+        val dummies = mutableListOf<Offset>()
 
-        pendingPositions.forEach { (personId, positionList) ->
-            if (positionList.size >= 2) {
-                // Вычисляем среднюю позицию
-                val avgX = positionList.map { it.x }.average().toFloat()
-                val y = positionList.first().y // Y должен быть одинаковым
-
-                // Обновляем позицию узла
-                finalPositions[personId] = Offset(avgX, y)
-
-                // TODO: Здесь можно добавить корректировку позиций потомков,
-                // если требуется сохранить относительное расположение поддерева
-            }
+        for (r in (startRank + 1) until endRank) {
+            val t = (r - startRank).toFloat() / (endRank - startRank).toFloat()
+            val x = unionX + (childCenterX - unionX) * t
+            val y = r * (config.nodeHeight + config.verticalSpacing) + config.nodeHeight / 2f
+            dummies.add(Offset(x, y))
         }
 
-        return finalPositions
-    }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // Вспомогательные методы
-    // ─────────────────────────────────────────────────────────────────────────
-
-    private fun reset(tree: TreeGraph) {
-        // Оптимизация: предварительное выделение HashMap с нужной ёмкостью
-        val personCount = tree.persons.size
-        val unionCount = tree.unions.size
-
-        personMap = HashMap(personCount * 2)
-        unionMap = HashMap(unionCount * 2)
-        subtreeWidths = HashMap((personCount + unionCount) * 2)
-        personUnions = HashMap(personCount * 2)
-
-        // Заполняем мапы
-        tree.persons.forEach { personMap[it.id] = it }
-        tree.unions.forEach { unionMap[it.id] = it }
-
-        // Строим индекс союзов для каждого человека
-        tree.unions.forEach { union ->
-            personUnions.getOrPut(union.person1Id) { mutableListOf() }.let {
-                if (it is MutableList) it.add(union) else personUnions[union.person1Id] =
-                    (it + union)
-            }
-            if (union.person2Id.isNotEmpty()) {
-                personUnions.getOrPut(union.person2Id) { mutableListOf() }.let {
-                    if (it is MutableList) it.add(union) else personUnions[union.person2Id] =
-                        (it + union)
-                }
-            }
-        }
-
-        // Сортируем союзы по generation для каждого человека
-        personUnions.replaceAll { _, unions ->
-            unions.sortedBy { it.generation }
-        }
-
-        cyclicLinks.clear()
-        placedNodes.clear()
-        pendingPositions.clear()
+        dummyNodesResult["$unionId->$childId"] = dummies
     }
 }

@@ -7,14 +7,11 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import feature.tree.ui.tree_canvas.model.LayoutConfig
 
 /**
- * Draws the classic genealogy branch:
- *
- *   parentAnchor
- *        │
- *        ├──────┬──────┐
- *        │      │      │
- *     child1  child2  child3
+ * Draws the family branch from a union point down to children.
+ * parentAnchor is the point where the line starts (the junction on the marriage line).
+ * childTops are the top-center points of each child's card or the first dummy node.
  */
+
 internal fun DrawScope.drawFamilyLines(
     parentAnchor: Offset,
     childTops: List<Offset>,
@@ -22,61 +19,67 @@ internal fun DrawScope.drawFamilyLines(
     isCyclic: Boolean,
     color: Color,
 ) {
-    val strokeWidth = if (isCyclic) 2f else 1.8f
-    val pathEffect = if (isCyclic) PathEffect.dashPathEffect(floatArrayOf(10f, 6f)) else null
+    if (childTops.isEmpty()) return
 
-    val junctionY = parentAnchor.y + config.verticalSpacing / 2f
+    val strokeWidth = 2f
+    val pathEffect = if (isCyclic) {
+        PathEffect.dashPathEffect(floatArrayOf(10f, 6f))
+    } else {
+        null
+    }
 
-    // Vertical stem from parent anchor down to junction
+    // Низ карточки родителя + половина расстояния до детей.
+    val junctionY = parentAnchor.y + config.nodeHeight / 2f + config.verticalSpacing / 2f
+
     drawLine(
         color = color,
-        start = Offset(x = parentAnchor.x, y = parentAnchor.y - config.nodeHeight / 2),
+        start = parentAnchor,
         end = Offset(parentAnchor.x, junctionY),
         strokeWidth = strokeWidth,
         pathEffect = pathEffect
     )
 
     if (childTops.size == 1) {
-        // Single child — straight vertical line, no horizontal bar
-        drawLine(
-            color = color,
-            start = Offset(childTops[0].x, junctionY),
-            end = childTops[0],
-            strokeWidth = strokeWidth,
-            pathEffect = pathEffect
-        )
-        // Connect stem to child if off-center
-        if (childTops[0].x != parentAnchor.x) {
+        val child = childTops.first()
+
+        if (child.x != parentAnchor.x) {
             drawLine(
                 color = color,
                 start = Offset(parentAnchor.x, junctionY),
-                end = Offset(childTops[0].x, junctionY),
+                end = Offset(child.x, junctionY),
                 strokeWidth = strokeWidth,
                 pathEffect = pathEffect
             )
         }
-    } else {
-        // Multiple children — horizontal bar at junctionY
-        val leftX = childTops.minOf { it.x }
-        val rightX = childTops.maxOf { it.x }
 
         drawLine(
             color = color,
-            start = Offset(leftX, junctionY),
-            end = Offset(rightX, junctionY),
+            start = Offset(child.x, junctionY),
+            end = child,
             strokeWidth = strokeWidth,
             pathEffect = pathEffect
         )
+        return
+    }
 
-        // Vertical drop to each child
-        childTops.forEach { childTop ->
-            drawLine(
-                color = color,
-                start = Offset(childTop.x, junctionY),
-                end = childTop,
-                strokeWidth = strokeWidth,
-                pathEffect = pathEffect
-            )
-        }
+    val minX = minOf(childTops.minOf { it.x }, parentAnchor.x)
+    val maxX = maxOf(childTops.maxOf { it.x }, parentAnchor.x)
+
+    drawLine(
+        color = color,
+        start = Offset(minX, junctionY),
+        end = Offset(maxX, junctionY),
+        strokeWidth = strokeWidth,
+        pathEffect = pathEffect
+    )
+
+    childTops.forEach { childTop ->
+        drawLine(
+            color = color,
+            start = Offset(childTop.x, junctionY),
+            end = childTop,
+            strokeWidth = strokeWidth,
+            pathEffect = pathEffect
+        )
     }
 }

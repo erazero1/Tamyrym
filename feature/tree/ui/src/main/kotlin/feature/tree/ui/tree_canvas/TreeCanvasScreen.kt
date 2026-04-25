@@ -19,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.TransformOrigin
@@ -27,7 +26,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import core.presentation.R
 import core.ui.theme.AppTheme
@@ -167,6 +165,7 @@ private fun TreeCanvasLayout(
     }
 }
 
+
 @Composable
 private fun TreeCanvasContent(
     modifier: Modifier = Modifier,
@@ -178,6 +177,7 @@ private fun TreeCanvasContent(
     onEvent: (TreeCanvasEvent) -> Unit,
 ) {
     val density = LocalDensity.current
+
     val pixelConfig = remember(config, density) {
         with(density) {
             LayoutConfig(
@@ -185,12 +185,12 @@ private fun TreeCanvasContent(
                 nodeHeight = config.nodeHeight.dp.toPx(),
                 horizontalSpacing = config.horizontalSpacing.dp.toPx(),
                 verticalSpacing = config.verticalSpacing.dp.toPx(),
-                spouseSpacing = config.spouseSpacing.dp.toPx()
+                spouseSpacing = config.spouseSpacing.dp.toPx(),
+                unionSpacing = config.unionSpacing.dp.toPx(),
             )
         }
     }
 
-    // Update layout config in ViewModel when pixelConfig changes
     LaunchedEffect(pixelConfig) {
         onEvent(TreeCanvasEvent.UpdateLayoutConfig(pixelConfig))
     }
@@ -202,23 +202,13 @@ private fun TreeCanvasContent(
 
     val positions = layoutResult.positions
     val cyclicSet = layoutResult.cyclicLinks
+    val dummyNodes = layoutResult.dummyNodes
 
     ZoomableCanvas(
         modifier = modifier
             .fillMaxSize()
             .background(AppTheme.colors.surfaceBright)
     ) {
-        // ── Viewport Culling ─────────────────────────────────────────────
-        val viewportRect = remember(scale, offset, canvasSize) {
-            if (canvasSize == IntSize.Zero) return@remember Rect.Zero
-            Rect(
-                left = -offset.x / scale,
-                top = -offset.y / scale,
-                right = (-offset.x + canvasSize.width) / scale,
-                bottom = (-offset.y + canvasSize.height) / scale
-            ).inflate(200f) // Add margin to avoid flickering at edges
-        }
-
         Box(
             modifier = Modifier
                 .graphicsLayer(
@@ -233,76 +223,108 @@ private fun TreeCanvasContent(
             val colorLine = AppTheme.colors.outline
             val colorUnionDot = AppTheme.colors.tertiary
             val colorCyclic = AppTheme.colors.menuIconRed
+            Canvas(modifier = Modifier.fillMaxSize()) {
 
-            // ── Layer 1: relationship lines ──────────────────────────────
-            Canvas(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .drawWithCache {
-                        onDrawBehind {
-                            // Spouse connector lines
-                            tree.unions.forEach { union ->
-                                if (union.person2Id.isEmpty()) return@forEach
-                                val p1Pos = positions[union.person1Id] ?: return@forEach
-                                val p2Pos = positions[union.person2Id] ?: return@forEach
+                // 1) Браки / связь между супругами
+                tree.unions.forEach { union ->
+                    val p1Pos = positions[union.person1Id] ?: return@forEach
+                    val p2Pos = positions[union.person2Id]
 
-                                val midY = p1Pos.y + pixelConfig.nodeHeight / 2f
-                                val startX = p1Pos.x + pixelConfig.nodeWidth
-                                val endX = p2Pos.x
-
-                                // Culling for lines
-                                val lineRect = Rect(startX, midY - 10f, endX, midY + 10f)
-                                if (!viewportRect.overlaps(lineRect)) return@forEach
-
-                                drawLine(
-                                    color = colorLine,
-                                    start = Offset(startX, midY),
-                                    end = Offset(endX, midY),
-                                    strokeWidth = 2f
-                                )
-
-                                // Union dot
-                                val unionPos = positions[union.id]
-                                if (unionPos != null) {
-                                    drawCircle(
-                                        color = colorUnionDot,
-                                        radius = 5f,
-                                        center = Offset((startX + endX) / 2f, midY)
-                                    )
-                                }
+                    val unionPos = positions[union.id] ?: run {
+                        val centerX = when {
+                            p2Pos != null -> {
+                                ((p1Pos.x + pixelConfig.nodeWidth / 2f) + (p2Pos.x + pixelConfig.nodeWidth / 2f)) / 2f
                             }
 
-                            // Parent-Child lines
-                            tree.unions.forEach { union ->
-                                val unionPos = positions[union.id] ?: return@forEach
-                                if (union.childrenIds.isEmpty()) return@forEach
+                            else -> p1Pos.x + pixelConfig.nodeWidth / 2f
+                        }
+                        Offset(centerX, p1Pos.y + pixelConfig.nodeHeight / 2f)
+                    }
 
-                                val isCyclic = union.id in cyclicSet
+                    if (p2Pos != null && union.person2Id.isNotBlank()) {
+                        val left = if (p1Pos.x <= p2Pos.x) p1Pos else p2Pos
+                        val right = if (p1Pos.x <= p2Pos.x) p2Pos else p1Pos
 
-                                val childTops = union.childrenIds.mapNotNull { childId ->
-                                    positions[childId]?.let { pos ->
-                                        val topCenter =
-                                            Offset(pos.x + pixelConfig.nodeWidth / 2f, pos.y)
-                                        // Optimization: we could filter individual children here,
-                                        // but it's more complex for the path drawing logic.
-                                        topCenter
-                                    }
-                                }
-                                if (childTops.isEmpty()) return@forEach
+                        drawLine(
+                            color = colorLine,
+                            start = Offset(left.x + pixelConfig.nodeWidth, unionPos.y),
+                            end = Offset(right.x, unionPos.y),
+                            strokeWidth = 2f
+                        )
+                    }
 
-                                drawFamilyLines(
-                                    parentAnchor = unionPos,
-                                    childTops = childTops,
-                                    config = pixelConfig,
-                                    isCyclic = isCyclic,
-                                    color = if (isCyclic) colorCyclic else colorLine
-                                )
+                    drawCircle(
+                        color = colorUnionDot,
+                        radius = 6f,
+                        center = unionPos
+                    )
+                }
+
+                // 2) Родители -> дети
+                tree.unions.forEach { union ->
+                    val unionPos = positions[union.id] ?: return@forEach
+                    if (union.childrenIds.isEmpty()) return@forEach
+
+                    val isCyclic = union.id in cyclicSet
+                    val color = if (isCyclic) colorCyclic else colorLine
+
+                    val childTops = union.childrenIds.mapNotNull { childId ->
+                        val dummyKey = "${union.id}->$childId"
+                        val dummies = dummyNodes[dummyKey]
+
+                        when {
+                            !dummies.isNullOrEmpty() -> dummies.first()
+                            positions[childId] != null -> {
+                                val childPos = positions[childId]!!
+                                Offset(childPos.x + pixelConfig.nodeWidth / 2f, childPos.y)
                             }
+
+                            else -> null
                         }
                     }
-            ) {}
 
-            // ── Layer 2: person cards ────────────────────────────────────
+                    if (childTops.isNotEmpty()) {
+                        drawFamilyLines(
+                            parentAnchor = unionPos,
+                            childTops = childTops,
+                            config = pixelConfig,
+                            isCyclic = isCyclic,
+                            color = color
+                        )
+                    }
+
+                    // Если есть dummy nodes, дорисовываем сегменты длинной связи.
+                    union.childrenIds.forEach { childId ->
+                        val dummies = dummyNodes["${union.id}->$childId"] ?: return@forEach
+                        if (dummies.isEmpty()) return@forEach
+
+                        val childPos = positions[childId] ?: return@forEach
+                        val childTop = Offset(
+                            childPos.x + pixelConfig.nodeWidth / 2f,
+                            childPos.y
+                        )
+
+                        var prev = unionPos
+                        dummies.forEach { point ->
+                            drawLine(
+                                color = color,
+                                start = prev,
+                                end = point,
+                                strokeWidth = 2f
+                            )
+                            prev = point
+                        }
+                        drawLine(
+                            color = color,
+                            start = prev,
+                            end = childTop,
+                            strokeWidth = 2f
+                        )
+                    }
+                }
+            }
+
+            // 3) Карточки людей
             tree.persons.forEach { person ->
                 val pos = positions[person.id] ?: return@forEach
                 val cardRect = Rect(
@@ -312,20 +334,16 @@ private fun TreeCanvasContent(
                     pos.y + pixelConfig.nodeHeight
                 )
 
-                if (viewportRect.overlaps(cardRect)) {
-                    PersonCard(
-                        person = person,
-                        config = pixelConfig,
-                        scale = scale, // Pass scale for LOD
-                        modifier = Modifier.offset {
-                            IntOffset(pos.x.roundToInt(), pos.y.roundToInt())
-                        },
-                        onCardClick = { personId ->
-                            onPersonClick(personId)
-                        },
-                        onCardLongClick = onCardLongClick,
-                    )
-                }
+                PersonCard(
+                    person = person,
+                    config = pixelConfig,
+                    scale = scale,
+                    modifier = Modifier.offset {
+                        IntOffset(pos.x.roundToInt(), pos.y.roundToInt())
+                    },
+                    onCardClick = onPersonClick,
+                    onCardLongClick = onCardLongClick,
+                )
             }
         }
     }
